@@ -1,0 +1,8 @@
+.navbar {
+  border-bottom: 1px solid rgb(50, 63, 82);
+}
+
+.logo,
+.sidebar {
+  border-right: 1px solid rgb(50, 63, 82);
+}
