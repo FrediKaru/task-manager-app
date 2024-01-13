@@ -9,12 +9,16 @@ import { Logo } from "./components/Logo";
 import { AddModal } from "./components/AddModal";
 
 // Fetch data
-import data from "./data.json";
+import data from "./api/data.json";
+import { useTasks } from "./hooks/useTasks";
 
 function App() {
   const [allBoards, setAllBoards] = useState(data);
   const [selectedBoard, setSelectedBoard] = useState(allBoards.boards[0]);
   const [modalOpen, setModalOpen] = useState(true);
+
+  const { tasks } = useTasks();
+  console.log(tasks);
 
   function selectBoard(boardName: string): void {
     setSelectedBoard(data.boards.find((board) => board.name === boardName));
@@ -29,7 +33,7 @@ function App() {
       const updatedBoard = { ...selectedBoard };
 
       const updatedColumn = { ...updatedBoards.columns[columnIndex] };
-//////!!!!!!!!!!!!
+      //////!!!!!!!!!!!!
       updatedColumn.push(task);
       updatedBoards.columns[columnIndex] = updatedColumn;
 
