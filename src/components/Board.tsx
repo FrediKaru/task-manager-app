@@ -1,22 +1,27 @@
 import React from "react";
 
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { useTasks } from "../hooks/useTasks";
 
-export const Content = ({ selectedBoard }) => {
-  function completedTasks(tasks: Array<[]>): number {
+export const Board = () => {
+  const { boardsData, currentBoard } = useTasks();
+  console.log(currentBoard)
+
+  function completedTasks(tasks) {
     const completedTasks = tasks.filter((task) => task.isCompleted === true);
     return completedTasks.length;
   }
 
   return (
     <div>
+      <h3>This is board comp</h3>
       <DragDropContext
         onDragEnd={() => {
           console.log("dragndrop happened");
         }}
       >
         <div className="grid grid-cols-3 gap-5 text-white ">
-          {selectedBoard.columns.map((column) => (
+          {currentBoard.columns.map((column) => (
             <div key={column.name}>
               <div className="flex items-center gap-2">
                 <div className={`bg-todo w-4 h-4 rounded-full`}></div>

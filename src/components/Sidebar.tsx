@@ -1,18 +1,19 @@
 import React from "react";
 
 import boardIcon from "../assets/icon-board.svg";
+import { useTasks } from "../hooks/useTasks";
 
-function BoardListItem({ board, selectedBoard, selectBoard }) {
+function BoardListItem({ board, currentBoard }) {
   return (
-    <div className="">
-      <div
-        onClick={() => selectBoard(board.name)}
-        className={
-          board.name === selectedBoard.name
-            ? "text-white bg-purple pl-3 py-2 flex rounded-r-full"
-            : "text-gra pl-3 py-2 flex"
-        }
-      >
+    <div
+      className=""
+      className={
+        board.name === currentBoard
+          ? "text-white bg-purple pl-3 py-2 flex rounded-r-full"
+          : "text-gray pl-3 py-2 flex"
+      }
+    >
+      <div onClick={() => console.log("yes")}>
         <img src={boardIcon} alt="Board Icon" />
         <p className="ml-1">{board.name}</p>
       </div>
@@ -20,16 +21,19 @@ function BoardListItem({ board, selectedBoard, selectBoard }) {
   );
 }
 
-export const Sidebar = ({ data, selectBoard, selectedBoard }) => {
+export const Sidebar = () => {
+  const { boardsData, currentBoard, setCurrentBoard } = useTasks();
+  // console.log("here");
+  // console.log(boardsData);
+
   return (
     <div className=" text-gray">
-      <p>ALL BOARDS ({data.boards.length})</p>
-      {data.boards.map((board) => (
+      <p>ALL BOARDS {boardsData.length}</p>
+      {boardsData.map((board) => (
         <BoardListItem
           key={board.name}
           board={board}
-          selectedBoard={selectedBoard}
-          selectBoard={selectBoard}
+          currentBoard={currentBoard}
         />
       ))}
       <a href="#" className="text-purple">

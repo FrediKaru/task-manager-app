@@ -4,6 +4,7 @@ type Subtask = {
   title: string;
   isCompleted: boolean;
 };
+
 type Task = {
   title: string;
   description: string;
@@ -23,21 +24,25 @@ type Board = {
 };
 
 export const useTasks = () => {
-  const [tasks, setTasks] = useState<Board[]>([]);
+  const [boardsData, setBoardsData] = useState<Board[]>([]);
+  const [currentBoard, setCurrentBoard] = useState<Board>();
 
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const url = "./src/api/data.json";
-
+        const url = "src/api/data.json";
         const response = await fetch(url);
 
         if (!response.ok) {
           throw new Error("Failed to fetch tasks");
         }
-        const tasksData: Board[] = await response.json();
+        const userData = await response.json();
+        console.log(userData);
 
-        setTasks(tasksData);
+        setBoardsData(userData.boards);
+        setCurrentBoard(userData.boards[0]);
+        console.log("here");
+        console.log(currentBoard);
       } catch (error) {
         console.error("Error fetching tasks", error);
       }
@@ -45,5 +50,9 @@ export const useTasks = () => {
     fetchTasks();
   }, []);
 
-  return { tasks };
+  return {
+    boardsData,
+    currentBoard,
+    setCurrentBoard,
+  };
 };
