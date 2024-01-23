@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Outlet, useLoaderData, Link, Form } from "react-router-dom";
+import { Outlet, useLoaderData, NavLink, Form } from "react-router-dom";
 
 import { getBoards } from "../boards";
 
@@ -14,24 +14,12 @@ export async function loader() {
 
 function Root() {
   const { boards } = useLoaderData();
-  const [modalOpen, setModalOpen] = useState(false);
   console.log(boards);
 
   return (
     <>
       <div className="flex flex-col h-screen">
-        {modalOpen && (
-          <div className="fixed inset-0 flex items-center justify-center">
-            <div className="absolute inset-0 opacity-50 bg-secondary"></div>
-            <div className="absolute bg-primary p-4 rounded-lg w-full sm:w-96 md:w-1/2 lg:w-1/3 xl:w-1/3">
-              {/* <AddModal
-              // exitModal={setModal}
-              // addTask={addTask}
-              // columns={selectedBoard.columns}
-              /> */}
-            </div>
-          </div>
-        )}
+        
         <div className="flex flex-row">
           <div className="logo bg-secondary col-span-1 row-span-1 flex items-center">
             <Logo />
@@ -46,13 +34,22 @@ function Root() {
           <div className="sidebar">
             <div className="mt-10 text-purple">
               <ul>
-                {/* {boards.map((board) => (
+                {boards.map((board) => (
                   <li key={board.id}>
-                    <Link to={`boards/${board.id}`}>
+                    <NavLink
+                      to={`boards/${board.id}`}
+                      className={({ isActive, isPending }) =>
+                        isActive
+                          ? "text-white fredi"
+                          : isPending
+                          ? "text-gray"
+                          : ""
+                      }
+                    >
                       <h2>{board.name}</h2>
-                    </Link>
+                    </NavLink>
                   </li>
-                ))} */}
+                ))}
                 <li>
                   <Form method="post">
                     <button type="submit">Add new</button>

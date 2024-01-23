@@ -33,9 +33,10 @@ export async function getBoards(query) {
 }
 
 export async function getBoard(id) {
+  console.log(id);
   await fakeNetwork(`board:${id}`);
   let boards = await localforage.getItem("boards");
-  let board = boards.find((board) => board.id === id);
+  let board = boards.find((board) => board.id == id);
   console.log(board);
   return board ?? null;
 }

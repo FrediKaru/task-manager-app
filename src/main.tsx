@@ -7,6 +7,7 @@ import { Board, loader as boardLoader } from "./routes/board";
 import "./index.css";
 import ErrorPage from "./routes/error-page.js";
 import BoardErrorPage from "./routes/board-error.js";
+import { EditModal } from "./components/EditModal.jsx";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,7 @@ const router = createBrowserRouter([
         loader: boardLoader,
         errorElement: <BoardErrorPage />,
       },
+      { path: "boards/:boardId/cards/:cardId", element: <EditModal /> },
     ],
   },
 ]);
