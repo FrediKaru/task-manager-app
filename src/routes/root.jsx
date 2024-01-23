@@ -1,16 +1,21 @@
 import { useState } from "react";
-import { Outlet } from "react-router";
+import { Outlet, useLoaderData, Link, Form } from "react-router-dom";
+
+import { getBoards } from "../boards";
 
 // Components
-import { Sidebar } from "../components/Sidebar";
 import { Navbar } from "../components/Navbar";
-import { Content } from "../components/Board";
 import { Logo } from "../components/Logo";
 
-import { useTasks } from "../hooks/useTasks";
+export async function loader() {
+  const boards = await getBoards();
+  return { boards };
+}
 
 function Root() {
+  const { boards } = useLoaderData();
   const [modalOpen, setModalOpen] = useState(false);
+  console.log(boards);
 
   return (
     <>
@@ -39,8 +44,21 @@ function Root() {
         </div>
         <div className="flex flex-row flex-grow bg-secondary">
           <div className="sidebar">
-            <div className="mt-10">
-              <Sidebar />
+            <div className="mt-10 text-purple">
+              <ul>
+                {/* {boards.map((board) => (
+                  <li key={board.id}>
+                    <Link to={`boards/${board.id}`}>
+                      <h2>{board.name}</h2>
+                    </Link>
+                  </li>
+                ))} */}
+                <li>
+                  <Form method="post">
+                    <button type="submit">Add new</button>
+                  </Form>
+                </li>
+              </ul>
             </div>
           </div>
           <div className="content bg-primary flex-grow">

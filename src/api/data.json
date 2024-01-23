@@ -2,6 +2,7 @@
   "boards": [
     {
       "name": "Platform Launch",
+      "id": 1,
       "isActive": false,
       "columns": [
         {
@@ -287,6 +288,7 @@
     {
       "name": "Marketing Plan",
       "isActive": false,
+      "id": 2,
       "columns": [
         {
           "name": "Todo",
@@ -379,6 +381,7 @@
     {
       "name": "Roadmap",
       "isActive": false,
+      "id": 3,
       "columns": [
         {
           "name": "Now",
