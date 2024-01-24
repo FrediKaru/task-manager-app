@@ -34,7 +34,9 @@ export function AddCard() {
             className="bg-secondary"
           ></input>
           <br></br>
-          <button>Add a card</button>
+          <button className="bg-purple rounded-full px-5 py-1 text-sm mt-4">
+            Add a card
+          </button>
         </div>
       ) : (
         <div className="  rounded-lg my-2 px-3 py-5 cursor-pointer">
