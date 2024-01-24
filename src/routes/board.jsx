@@ -1,5 +1,5 @@
-import React from "react";
-import { useNavigate, Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { getBoard } from "./../boards";
 
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";

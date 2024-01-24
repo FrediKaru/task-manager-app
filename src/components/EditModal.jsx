@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { getTaskByName, saveTask } from "./../boards";
+import { useParams, useNavigate, redirect, Link } from "react-router-dom";
+import { getTaskByName, saveTask, getBoard } from "./../boards";
 
 const inputClass =
   "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white";
 const labelClass = "block text-sm font-medium text-gray-900 dark:text-white";
 
 export const EditModal = () => {
+  const { boardId } = useParams();
+  const { taskTitle } = useParams();
   const [oldTask, setOldTask] = useState("");
   const [formData, setFormData] = useState("");
   const navigate = useNavigate();
-  const { taskTitle } = useParams();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,7 +28,6 @@ export const EditModal = () => {
 
   function handleSave() {
     saveTask(oldTask, formData);
-    navigate(-1);
   }
 
   // useEffect(() => {
@@ -111,13 +111,15 @@ export const EditModal = () => {
           <option value="Doing">Done</option>
         </select>
       </div>
-      <button
-        type="button"
-        onClick={handleSave}
-        className="text-white bg-purple w-full hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-      >
-        Save
-      </button>
+      <Link to={`/boards/${boardId}`} onClick={handleSave}>
+        <button
+          type="button"
+          onClick={handleSave}
+          className="text-white bg-purple w-full hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        >
+          Save
+        </button>
+      </Link>
     </div>
   );
 };
