@@ -28,18 +28,19 @@ export function AddCard() {
           className="bg-secondary rounded-lg my-2 px-3 py-5 cursor-pointer"
           ref={inputRef}
         >
-          <input
+          <textarea
             ref={inputRef}
+            style={{ resize: "none" }}
             placeholder="Enter title here..."
-            className="bg-secondary"
-          ></input>
+            className="bg-secondary w-full"
+          ></textarea>
           <br></br>
           <button className="bg-purple rounded-full px-5 py-1 text-sm mt-4">
             Add a card
           </button>
         </div>
       ) : (
-        <div className="  rounded-lg my-2 px-3 py-5 cursor-pointer">
+        <div className="  rounded-lg my-2 px-3 py-1 cursor-pointer">
           <button className="text-gray" onClick={handleUserClick}>
             + Add a card
           </button>
