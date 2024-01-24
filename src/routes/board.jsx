@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Route, useNavigate, Link, Routes } from "react-router-dom";
+import React from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { getBoard } from "./../boards";
 
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
@@ -15,8 +15,9 @@ export const Board = () => {
   const navigate = useNavigate();
   const { board } = useLoaderData();
 
-  const handleCardClick = (cardId) => {
-    navigate(`/board/${board.id}/cards/${cardId}`);
+  const handleCardClick = (task) => {
+    navigate(`/board/${board.id}/cards/${task.title}`);
+    ///boards/${board.id}/cards/${task.title}
   };
 
   function completedTasks(tasks) {
@@ -56,9 +57,7 @@ export const Board = () => {
                             {...provided.draggableProps}
                             ref={provided.innerRef}
                           >
-                            <Link
-                              to={`boards/${board.id}/cards/:${task.title}`}
-                            >
+                            <Link to={`boards/${board.id}/cards/${task.title}`}>
                               <Card
                                 task={task}
                                 completedTasks={completedTasks}

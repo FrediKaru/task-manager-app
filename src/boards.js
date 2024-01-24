@@ -48,12 +48,27 @@ export async function getTaskByName(taskName) {
   for (const board of boards) {
     for (const column of board.columns) {
       for (const task of column.tasks) {
-        if (task.title === taskName.substring(1)) {
+        if (task.title === taskName) {
           return task;
         }
       }
     }
   }
+}
+export async function saveTask(oldTask, updatedTask) {
+  await fakeNetwork(`card:${oldTask.title}`);
+  let boards = await localforage.getItem("boards");
+
+  for (const board of boards) {
+    for (const column of board.columns) {
+      for (const task of column.tasks) {
+        if (task.title === oldTask.title) {
+          Object.assign(task, updatedTask);
+        }
+      }
+    }
+  }
+  localforage.setItem("boards", boards);
 }
 
 export async function createBoard() {

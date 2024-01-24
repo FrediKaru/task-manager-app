@@ -1,22 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { getTaskByName } from "./../boards";
+import { useParams, useNavigate } from "react-router-dom";
+import { getTaskByName, saveTask } from "./../boards";
 
 const inputClass =
   "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white";
 const labelClass = "block text-sm font-medium text-gray-900 dark:text-white";
 
-export const EditModal = ({ exitModal }) => {
+export const EditModal = () => {
+  const [oldTask, setOldTask] = useState("");
   const [formData, setFormData] = useState("");
+  const navigate = useNavigate();
   const { taskTitle } = useParams();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const task = await getTaskByName(taskTitle);
-        console.log(task);
-        console.log("found it");
         setFormData(task);
+        setOldTask(task);
       } catch (error) {
         console.log("Error finding your item:", error);
       }
@@ -24,17 +25,20 @@ export const EditModal = ({ exitModal }) => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    console.log("formData is", JSON.stringify(formData));
-  }, [formData]);
+  function handleSave() {
+    saveTask(oldTask, formData);
+    navigate(-1);
+  }
 
-  // console.log(task);
+  // useEffect(() => {
+  //   console.log("formData is", JSON.stringify(formData));
+  // }, [formData]);
 
   return (
     <div className="  text-white p-4 w-full flex flex-col gap-5">
       <div className="flex justify-between">
-        <h2 className="text-xl font-semibold">Add New Task</h2>
-        <button className="text-gray opacity-50" onClick={exitModal}>
+        <h2 className="text-2xl font-semibold">{formData.title}</h2>
+        <button className="text-gray opacity-50" onClick={() => navigate(-1)}>
           X
         </button>
       </div>
@@ -61,6 +65,9 @@ export const EditModal = ({ exitModal }) => {
           type="text"
           id="description"
           className={`${inputClass} h-36`}
+          onChange={(e) =>
+            setFormData({ ...formData, description: e.target.value })
+          }
           defaultValue={formData.description}
           placeholder="e.g. It's always good to take a break. This 15 minute break will recharge the batteries a little."
         />
@@ -75,6 +82,14 @@ export const EditModal = ({ exitModal }) => {
           placeholder="e.g Make coffee"
           className={inputClass}
         />
+        <ul>
+          {formData.subtasks &&
+            formData.subtasks.map((subtask) => (
+              <li key={subtask.title}>
+                <p>{subtask.title}</p>
+              </li>
+            ))}
+        </ul>
       </div>
       <button
         type="button"
@@ -86,19 +101,22 @@ export const EditModal = ({ exitModal }) => {
         <label htmlFor="subtasks" className={labelClass}>
           Status
         </label>
-        <select className={`${inputClass}`}>
-          <option selected value="todo">
-            Todo
-          </option>
-          <option>Doing</option>
-          <option>Done</option>
+        <select
+          value={formData.status}
+          className={`${inputClass}`}
+          onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+        >
+          <option value="Todo">Todo</option>
+          <option value="Doing">Doing</option>
+          <option value="Doing">Done</option>
         </select>
       </div>
       <button
         type="button"
+        onClick={handleSave}
         className="text-white bg-purple w-full hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
       >
-        Create Task
+        Save
       </button>
     </div>
   );

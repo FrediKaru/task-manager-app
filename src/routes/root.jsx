@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Outlet, useLoaderData, NavLink, Form } from "react-router-dom";
 
 import { getBoards } from "../boards";
@@ -19,7 +18,6 @@ function Root() {
   return (
     <>
       <div className="flex flex-col h-screen">
-        
         <div className="flex flex-row">
           <div className="logo bg-secondary col-span-1 row-span-1 flex items-center">
             <Logo />
