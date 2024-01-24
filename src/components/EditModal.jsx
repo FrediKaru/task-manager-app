@@ -1,14 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { getTaskByName } from "./../boards";
 
 const inputClass =
   "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white";
 const labelClass = "block text-sm font-medium text-gray-900 dark:text-white";
 
 export const EditModal = ({ exitModal }) => {
-  const { boardId, cardId } = useParams();
-  console.log(cardId);
-  
+  const [formData, setFormData] = useState("");
+  const { taskTitle } = useParams();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const task = await getTaskByName(taskTitle);
+        console.log(task);
+        console.log("found it");
+        setFormData(task);
+      } catch (error) {
+        console.log("Error finding your item:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    console.log("formData is", JSON.stringify(formData));
+  }, [formData]);
+
+  // console.log(task);
+
   return (
     <div className="  text-white p-4 w-full flex flex-col gap-5">
       <div className="flex justify-between">
@@ -27,6 +48,8 @@ export const EditModal = ({ exitModal }) => {
           id="title"
           className={inputClass}
           placeholder="e.g Take coffee break"
+          value={formData.title}
+          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
           required
         ></input>
       </div>
@@ -38,6 +61,7 @@ export const EditModal = ({ exitModal }) => {
           type="text"
           id="description"
           className={`${inputClass} h-36`}
+          defaultValue={formData.description}
           placeholder="e.g. It's always good to take a break. This 15 minute break will recharge the batteries a little."
         />
       </div>

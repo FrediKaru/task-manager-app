@@ -22,7 +22,7 @@ const router = createBrowserRouter([
         loader: boardLoader,
         errorElement: <BoardErrorPage />,
       },
-      { path: "boards/:boardId/cards/:cardId", element: <EditModal /> },
+      { path: "boards/:boardId/cards/:taskTitle", element: <EditModal /> },
     ],
   },
 ]);

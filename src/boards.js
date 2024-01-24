@@ -41,6 +41,21 @@ export async function getBoard(id) {
   return board ?? null;
 }
 
+export async function getTaskByName(taskName) {
+  await fakeNetwork(`card:${taskName}`);
+  let boards = await localforage.getItem("boards");
+
+  for (const board of boards) {
+    for (const column of board.columns) {
+      for (const task of column.tasks) {
+        if (task.title === taskName.substring(1)) {
+          return task;
+        }
+      }
+    }
+  }
+}
+
 export async function createBoard() {
   console.log("createBoard triggered");
 
