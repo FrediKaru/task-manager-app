@@ -5,6 +5,7 @@ import { getBoard } from "./../boards";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useLoaderData } from "react-router-dom";
 import { Card } from "../components/Card";
+import { AddCard } from "../components/AddCard";
 
 export async function loader({ params }) {
   const board = await getBoard(params.boardId);
@@ -71,6 +72,7 @@ export const Board = () => {
                   </div>
                 )}
               </Droppable>
+              <AddCard />
             </div>
           ))}
         </div>

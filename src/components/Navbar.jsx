@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getBoard } from "../boards";
+import { getBoard, saveBoardName } from "../boards";
 
 export const Navbar = () => {
   const { boardId } = useParams();
@@ -11,8 +11,10 @@ export const Navbar = () => {
     setIsEditing(!isEditing);
   }
 
-  function handleSave() {
+  async function handleSave() {
     console.log("save happened");
+    await saveBoardName(boardId, title);
+    handleEditing();
   }
 
   useEffect(() => {

@@ -70,6 +70,28 @@ export async function saveTask(oldTask, updatedTask) {
   }
   localforage.setItem("boards", boards);
 }
+export async function saveBoardName(id, newName) {
+  console.log("revieved id", id);
+  console.log("revieved new name", newName);
+  await fakeNetwork(`boards:${id}`);
+  let boards = await localforage.getItem("boards");
+  console.log("imported old boards:", boards);
+
+  if (boards) {
+    let boardsNew = boards.map((board) => {
+      if (board.id == id) {
+        console.log("ids matched", id, board.id);
+        return { ...board, name: newName };
+      }
+      console.log("ids did not match", id, board.id);
+      return board;
+    });
+    console.log("updated boards:", boardsNew);
+    await localforage.setItem("boards", boardsNew);
+  } else {
+    console.log("Error: Unable to update board title");
+  }
+}
 
 export async function createBoard() {
   console.log("createBoard triggered");
