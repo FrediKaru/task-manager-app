@@ -47,7 +47,9 @@ function Root() {
                 ))}
                 <li>
                   <Form method="post">
-                    <button type="submit">Add new</button>
+                    <button type="submit" className="text-gray">
+                      Add new +
+                    </button>
                   </Form>
                 </li>
               </ul>

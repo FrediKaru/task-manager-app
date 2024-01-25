@@ -1,8 +1,15 @@
 import React, { useEffect, useState, useRef } from "react";
 
-export function AddCard() {
+import { addTask } from "../boards";
+
+export function AddCard({ boardId, columnName }) {
+  const [userInput, setUserInput] = useState("");
   const [userClicked, setUserClicked] = useState(false);
   const inputRef = useRef(null);
+
+  useEffect(() => {
+    console.log(userInput);
+  }, [userInput]);
 
   useEffect(() => {
     const handleClickOutSide = (event) => {
@@ -20,6 +27,10 @@ export function AddCard() {
   function handleUserClick() {
     setUserClicked(!userClicked);
   }
+  async function handleSave() {
+    await addTask(boardId, columnName, userInput);
+    await setUserInput("");
+  }
 
   return (
     <div>
@@ -33,9 +44,13 @@ export function AddCard() {
             style={{ resize: "none" }}
             placeholder="Enter title here..."
             className="bg-secondary w-full"
+            onChange={(e) => setUserInput(e.target.value)}
           ></textarea>
           <br></br>
-          <button className="bg-purple rounded-full px-5 py-1 text-sm mt-4">
+          <button
+            className="bg-purple rounded-full px-5 py-1 text-sm mt-4"
+            onClick={handleSave}
+          >
             Add a card
           </button>
         </div>

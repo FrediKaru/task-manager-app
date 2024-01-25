@@ -46,7 +46,7 @@ a.pending {
   margin: 0rem 0;
   padding: 0.5rem 0;
   padding-left: var(--left-padding);
-  border-radius: 0 1rem 1rem 0;
+  border-radius: 0 10rem 10rem 0;
 }
 
 nav h1 {

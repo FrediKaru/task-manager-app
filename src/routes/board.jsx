@@ -15,6 +15,7 @@ export async function loader({ params }) {
 export const Board = () => {
   const navigate = useNavigate();
   const { board } = useLoaderData();
+  console.log("board is", board);
 
   const handleCardClick = (task) => {
     navigate(`/board/${board.id}/cards/${task.title}`);
@@ -72,7 +73,7 @@ export const Board = () => {
                   </div>
                 )}
               </Droppable>
-              <AddCard />
+              <AddCard columnName={column.name} boardId={board.id} />
             </div>
           ))}
         </div>

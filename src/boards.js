@@ -70,6 +70,27 @@ export async function saveTask(oldTask, updatedTask) {
   }
   localforage.setItem("boards", boards);
 }
+export async function addTask(boardId, columnName, newTask) {
+  await fakeNetwork(`card:${newTask.title}`);
+  let boards = await localforage.getItem("boards");
+
+  for (const board of boards) {
+    if (board.id === boardId) {
+      for (const column of board.columns) {
+        if (column.name === columnName) {
+          column.tasks.push({
+            title: newTask,
+            description: "",
+            status: "Todo",
+            subtasks: [],
+          });
+        }
+      }
+    }
+  }
+  await localforage.setItem("boards", boards);
+}
+
 export async function saveBoardName(id, newName) {
   console.log("revieved id", id);
   console.log("revieved new name", newName);
