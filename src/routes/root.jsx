@@ -29,19 +29,16 @@ function Root() {
           </div>
         </div>
         <div className="flex flex-row flex-grow bg-secondary">
-          <div className="sidebar">
-            <div className="mt-10 text-purple">
+          <div id="sidebar">
+            <nav className="mt-10 text-purple">
+              <h1 className="text-white text-md font-medium">Boards</h1>
               <ul>
                 {boards.map((board) => (
                   <li key={board.id}>
                     <NavLink
                       to={`boards/${board.id}`}
                       className={({ isActive, isPending }) =>
-                        isActive
-                          ? "text-white fredi"
-                          : isPending
-                          ? "text-gray"
-                          : ""
+                        isActive ? "active" : isPending ? "pending" : ""
                       }
                     >
                       <h2>{board.name}</h2>
@@ -54,7 +51,7 @@ function Root() {
                   </Form>
                 </li>
               </ul>
-            </div>
+            </nav>
           </div>
           <div className="content bg-primary flex-grow">
             <div className="mx-4 mt-10">

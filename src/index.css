@@ -6,6 +6,10 @@
   padding: 0px;
 }
 
+html {
+  --left-padding: 1.5rem;
+}
+
 /* .logo,
 .sidebar,
 .navbar {
@@ -13,8 +17,11 @@
 } */
 
 .logo,
-.sidebar {
+#sidebar {
   min-width: 200px;
+}
+.logo {
+  padding-left: var(--left-padding);
 }
 .inp-group > input,
 .inp-group > textarea,
@@ -27,6 +34,21 @@
   margin-bottom: 5px;
 }
 
-.fredi {
-  margin-top: 40px;
+#sidebar nav ul li a.active {
+  background: hsl(224, 98%, 58%);
+  color: white;
+}
+
+a.pending {
+  color: rgb(156, 156, 156);
+}
+#sidebar li {
+  margin: 0rem 0;
+  padding: 0.5rem 0;
+  padding-left: var(--left-padding);
+  border-radius: 0 1rem 1rem 0;
+}
+
+nav h1 {
+  margin-left: var(--left-padding);
 }
