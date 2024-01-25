@@ -34,8 +34,8 @@ html {
   margin-bottom: 5px;
 }
 
-#sidebar nav ul li a.active {
-  background: hsl(224, 98%, 58%);
+#sidebar nav ul li:has(a.active) {
+  background: hsl(259, 77%, 44%);
   color: white;
 }
 
@@ -51,4 +51,8 @@ a.pending {
 
 nav h1 {
   margin-left: var(--left-padding);
+  margin-bottom: 0.5rem;
+}
+#sidebar {
+  padding-right: 1rem;
 }
