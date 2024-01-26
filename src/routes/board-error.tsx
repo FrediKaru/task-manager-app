@@ -7,7 +7,7 @@ export default function BoardErrorPage() {
   return (
     <div style={{ color: "white" }}>
       <h1>Oops!</h1>
-      <p>Something unexpected happened!</p>
+      <p>Something unexpected happened with the board!</p>
     </div>
   );
 }

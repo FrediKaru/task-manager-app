@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 
 import { addTask } from "../boards";
 
-export function AddCard({ boardId, columnName }) {
+export function AddCard({ boardId, columnName, refreshPage }) {
   const [userInput, setUserInput] = useState("");
   const [userClicked, setUserClicked] = useState(false);
   const inputRef = useRef(null);
@@ -30,6 +30,7 @@ export function AddCard({ boardId, columnName }) {
   async function handleSave() {
     await addTask(boardId, columnName, userInput);
     await setUserInput("");
+    await refreshPage();
   }
 
   return (

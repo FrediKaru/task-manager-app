@@ -1,19 +1,40 @@
-import { Outlet, useLoaderData, NavLink, Form } from "react-router-dom";
+import {
+  Outlet,
+  useLoaderData,
+  NavLink,
+  Form,
+  redirect,
+} from "react-router-dom";
 
-import { getBoards } from "../boards";
+import { getBoards, addBoard } from "../boards";
 
 // Components
 import { Navbar } from "../components/Navbar";
 import { Logo } from "../components/Logo";
+import { useEffect, useState } from "react";
 
 export async function loader() {
   const boards = await getBoards();
   return { boards };
 }
 
+export async function action({ request, params }) {
+  const formData = await request.formData();
+  const newForm = Object.fromEntries(formData);
+  const id = await Math.random();
+  console.log("new id", id);
+  await addBoard(newForm.name, id);
+  return redirect(`/boards/${id}`);
+}
+
 function Root() {
+  const [boardInputVisible, setBoardInputVisible] = useState(false);
   const { boards } = useLoaderData();
   console.log(boards);
+
+  function handleBoardInput() {
+    setBoardInputVisible(!boardInputVisible);
+  }
 
   return (
     <>
@@ -36,7 +57,7 @@ function Root() {
                 {boards.map((board) => (
                   <li key={board.id}>
                     <NavLink
-                      to={`boards/${board.id}`}
+                      to={`/boards/${board.id}`}
                       className={({ isActive, isPending }) =>
                         isActive ? "active" : isPending ? "pending" : ""
                       }
@@ -46,11 +67,25 @@ function Root() {
                   </li>
                 ))}
                 <li>
-                  <Form method="post">
-                    <button type="submit" className="text-gray">
+                  {boardInputVisible ? (
+                    <Form method="post" onSubmit={handleBoardInput}>
+                      <input name="name"></input>
+                      <button
+                        type="submit"
+                        className="bg-purple rounded-full px-5 py-1 text-sm mt-4 text-white"
+                      >
+                        Add board
+                      </button>
+                    </Form>
+                  ) : (
+                    <button
+                      type="button"
+                      className="text-gray"
+                      onClick={handleBoardInput}
+                    >
                       Add new +
                     </button>
-                  </Form>
+                  )}
                 </li>
               </ul>
             </nav>

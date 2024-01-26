@@ -70,6 +70,65 @@ export async function saveTask(oldTask, updatedTask) {
   }
   localforage.setItem("boards", boards);
 }
+
+export async function updateTask(oldTitle, updates) {
+  console.log("updates is", updates);
+  await fakeNetwork();
+  let boards = await localforage.getItem("boards");
+
+  for (const board of boards) {
+    for (const column of board.columns) {
+      for (const task of column.tasks) {
+        if (task.title === oldTitle) {
+          Object.assign(task, updates);
+          await set(boards);
+          return task;
+        }
+      }
+    }
+  }
+}
+
+export async function addBoard(name, id ) {
+  await fakeNetwork();
+  let boards = (await localforage.getItem("boards")) || [];
+  let updatedBoards = [
+    ...boards,
+    {
+      name: name,
+      id: id,
+      isActive: false,
+      columns: [
+        {
+          name: "Todo",
+          tasks: [
+            {
+              title: "Build UI for onboarding flow",
+              description: "",
+              status: "Todo",
+              subtasks: [
+                {
+                  title: "Sign up page",
+                  isCompleted: true,
+                },
+                {
+                  title: "Sign in page",
+                  isCompleted: false,
+                },
+                {
+                  title: "Welcome page",
+                  isCompleted: false,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ];
+  await localforage.setItem("boards", updatedBoards);
+}
+
 export async function addTask(boardId, columnName, newTask) {
   await fakeNetwork(`card:${newTask.title}`);
   let boards = await localforage.getItem("boards");
@@ -79,7 +138,7 @@ export async function addTask(boardId, columnName, newTask) {
       for (const column of board.columns) {
         if (column.name === columnName) {
           column.tasks.push({
-            title: newTask,
+            title: "newTask",
             description: "",
             status: "Todo",
             subtasks: [],

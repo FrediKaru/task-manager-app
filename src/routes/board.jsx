@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { useNavigate, Link, useSearchParams } from "react-router-dom";
+import React from "react";
+import { useNavigate, NavLink } from "react-router-dom";
 import { getBoard } from "./../boards";
 
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
@@ -17,12 +17,17 @@ export const Board = () => {
   const { board } = useLoaderData();
   console.log("board is", board);
 
+  const refreshPage = () => {
+    navigate(0);
+  };
+
   const handleCardClick = (task) => {
     navigate(`/board/${board.id}/cards/${task.title}`);
     ///boards/${board.id}/cards/${task.title}
   };
 
   function completedTasks(tasks) {
+    console.log("tasks in completed tasks is", tasks);
     const completedTasks = tasks.filter((task) => task.isCompleted === true);
     return completedTasks.length;
   }
@@ -59,13 +64,15 @@ export const Board = () => {
                             {...provided.draggableProps}
                             ref={provided.innerRef}
                           >
-                            <Link to={`boards/${board.id}/cards/${task.title}`}>
+                            <NavLink
+                              to={`/boards/${board.id}/cards/${task.title}`}
+                            >
                               <Card
                                 task={task}
                                 completedTasks={completedTasks}
                                 onClick={handleCardClick}
                               />
-                            </Link>
+                            </NavLink>
                           </div>
                         )}
                       </Draggable>
@@ -73,7 +80,11 @@ export const Board = () => {
                   </div>
                 )}
               </Droppable>
-              <AddCard columnName={column.name} boardId={board.id} />
+              <AddCard
+                columnName={column.name}
+                boardId={board.id}
+                refreshPage={refreshPage}
+              />
             </div>
           ))}
         </div>
