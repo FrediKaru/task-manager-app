@@ -8,7 +8,11 @@ import Root, {
   loader as rootLoader,
   action as rootAction,
 } from "./routes/root";
-import { Board, loader as boardLoader } from "./routes/board";
+import {
+  Board,
+  loader as boardLoader,
+  action as boardAction,
+} from "./routes/board";
 import {
   EditTask,
   loader as editLoader,
@@ -30,6 +34,7 @@ const router = createBrowserRouter([
       {
         path: "boards/:boardId",
         element: <Board />,
+        action: boardAction,
         loader: boardLoader,
 
         errorElement: <BoardErrorPage />,

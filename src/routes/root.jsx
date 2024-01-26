@@ -1,17 +1,11 @@
-import {
-  Outlet,
-  useLoaderData,
-  NavLink,
-  Form,
-  redirect,
-} from "react-router-dom";
+import { Outlet, useLoaderData, redirect } from "react-router-dom";
 
 import { getBoards, addBoard } from "../boards";
 
 // Components
 import { Navbar } from "../components/Navbar";
 import { Logo } from "../components/Logo";
-import { useEffect, useState } from "react";
+import BoardList from "../components/BoardList";
 
 export async function loader() {
   const boards = await getBoards();
@@ -28,13 +22,8 @@ export async function action({ request, params }) {
 }
 
 function Root() {
-  const [boardInputVisible, setBoardInputVisible] = useState(false);
   const { boards } = useLoaderData();
   console.log(boards);
-
-  function handleBoardInput() {
-    setBoardInputVisible(!boardInputVisible);
-  }
 
   return (
     <>
@@ -51,48 +40,10 @@ function Root() {
         </div>
         <div className="flex flex-row flex-grow bg-secondary">
           <div id="sidebar">
-            <nav className="mt-10 text-purple">
-              <h1 className="text-white text-md font-medium">Boards</h1>
-              <ul>
-                {boards.map((board) => (
-                  <li key={board.id}>
-                    <NavLink
-                      to={`/boards/${board.id}`}
-                      className={({ isActive, isPending }) =>
-                        isActive ? "active" : isPending ? "pending" : ""
-                      }
-                    >
-                      <h2>{board.name}</h2>
-                    </NavLink>
-                  </li>
-                ))}
-                <li>
-                  {boardInputVisible ? (
-                    <Form method="post" onSubmit={handleBoardInput}>
-                      <input name="name"></input>
-                      <button
-                        type="submit"
-                        className="bg-purple rounded-full px-5 py-1 text-sm mt-4 text-white"
-                      >
-                        Add board
-                      </button>
-                    </Form>
-                  ) : (
-                    <button
-                      type="button"
-                      className="text-gray"
-                      onClick={handleBoardInput}
-                    >
-                      Add new +
-                    </button>
-                  )}
-                </li>
-              </ul>
-            </nav>
+            <BoardList boards={boards} />
           </div>
           <div className="content bg-primary flex-grow">
             <div className="mx-4 mt-10">
-              {/* <Content /> */}
               <Outlet />
             </div>
           </div>

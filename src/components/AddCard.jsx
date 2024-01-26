@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 
-import { addTask } from "../boards";
+import { Form, useParams } from "react-router-dom";
 
-export function AddCard({ boardId, columnName, refreshPage }) {
+export function AddCard({ columnName }) {
   const [userInput, setUserInput] = useState("");
   const [userClicked, setUserClicked] = useState(false);
   const inputRef = useRef(null);
@@ -27,14 +27,9 @@ export function AddCard({ boardId, columnName, refreshPage }) {
   function handleUserClick() {
     setUserClicked(!userClicked);
   }
-  async function handleSave() {
-    await addTask(boardId, columnName, userInput);
-    await setUserInput("");
-    await refreshPage();
-  }
 
   return (
-    <div>
+    <Form method="post" id="add-task" onSubmit={handleUserClick}>
       {userClicked ? (
         <div
           className="bg-secondary rounded-lg my-2 px-3 py-5 cursor-pointer"
@@ -42,15 +37,17 @@ export function AddCard({ boardId, columnName, refreshPage }) {
         >
           <textarea
             ref={inputRef}
+            name="title"
             style={{ resize: "none" }}
             placeholder="Enter title here..."
             className="bg-secondary w-full"
-            onChange={(e) => setUserInput(e.target.value)}
           ></textarea>
+          <input type="hidden" name="columnName" defaultValue={columnName} />
           <br></br>
           <button
+            button="submit"
             className="bg-purple rounded-full px-5 py-1 text-sm mt-4"
-            onClick={handleSave}
+            // onClick={handleSave}
           >
             Add a card
           </button>
@@ -62,6 +59,6 @@ export function AddCard({ boardId, columnName, refreshPage }) {
           </button>
         </div>
       )}
-    </div>
+    </Form>
   );
 }

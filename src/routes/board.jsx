@@ -1,11 +1,21 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { useNavigate, NavLink } from "react-router-dom";
-import { getBoard } from "./../boards";
+import { addTask, getBoard } from "./../boards";
 
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, Form } from "react-router-dom";
 import { Card } from "../components/Card";
 import { AddCard } from "../components/AddCard";
+
+export async function action({ request, params }) {
+  const formData = await request.formData();
+  const newTask = Object.fromEntries(formData);
+  // console.log("formData name is:", newTask.title);
+  // console.log("formData column is:", newTask.columnName);
+  // console.log("action triggered in board");
+  await addTask(params.boardId, newTask.columnName, newTask);
+  return null;
+}
 
 export async function loader({ params }) {
   const board = await getBoard(params.boardId);
@@ -15,11 +25,10 @@ export async function loader({ params }) {
 export const Board = () => {
   const navigate = useNavigate();
   const { board } = useLoaderData();
-  console.log("board is", board);
 
-  const refreshPage = () => {
-    navigate(0);
-  };
+  // const [userInput, setUserInput] = useState("");
+  // const [userClicked, setUserClicked] = useState(false);
+  // const inputRef = useRef(null);
 
   const handleCardClick = (task) => {
     navigate(`/board/${board.id}/cards/${task.title}`);
@@ -27,18 +36,13 @@ export const Board = () => {
   };
 
   function completedTasks(tasks) {
-    console.log("tasks in completed tasks is", tasks);
     const completedTasks = tasks.filter((task) => task.isCompleted === true);
     return completedTasks.length;
   }
 
   return (
     <div>
-      <DragDropContext
-        onDragEnd={() => {
-          console.log("dragndrop happened");
-        }}
-      >
+      <DragDropContext onDragEnd={() => {}}>
         <div className="grid grid-cols-3 gap-5 text-white ">
           {board.columns.map((column) => (
             <div key={column.name}>
@@ -80,10 +84,10 @@ export const Board = () => {
                   </div>
                 )}
               </Droppable>
+
               <AddCard
                 columnName={column.name}
-                boardId={board.id}
-                refreshPage={refreshPage}
+                // refreshPage={refreshPage}
               />
             </div>
           ))}

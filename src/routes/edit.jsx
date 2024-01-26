@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, useLoaderData, Form, redirect } from "react-router-dom";
 import { getTaskByName, updateTask } from "./../boards";
 
@@ -8,7 +8,8 @@ const labelClass = "block text-sm font-medium text-gray-900 dark:text-white";
 
 export async function action({ request, params }) {
   const formData = await request.formData();
-  const updates = Object.fromEntries(formData);
+  let updates = Object.fromEntries(formData);
+  updates = { ...updates, subtasks: JSON.parse(updates.subtasks) };
   await updateTask(params.taskTitle, updates);
   return redirect(`/boards/${params.boardId}`);
 }
@@ -17,8 +18,36 @@ export async function loader({ params }) {
   const task = await getTaskByName(params.taskTitle);
   return { task };
 }
+const Label = ({ name }) => {
+  return (
+    <label className={labelClass} htmlFor={name}>
+      {name.charAt(0).toUpperCase()}
+      {name.slice(1)}
+    </label>
+  );
+};
+const Input = ({
+  name,
+  type = "text",
+  element = "input",
+  defaultValue = "",
+  placeholder = "",
+  addClasses = "",
+}) => {
+  const Element = element;
+  return (
+    <Element
+      type={type}
+      id={name}
+      name={name}
+      className={`${inputClass} ${addClasses || ""}`}
+      placeholder={placeholder}
+      defaultValue={defaultValue}
+    ></Element>
+  );
+};
 
-const FormInput = ({
+const LabelInput = ({
   name,
   type = "text",
   element = "input",
@@ -26,21 +55,24 @@ const FormInput = ({
   defaultValue = "",
   addClasses,
 }) => {
-  const Element = element;
   return (
     <>
-      <label className={labelClass} htmlFor={name}>
-        {name.charAt(0).toUpperCase()}
-        {name.slice(1)}
-      </label>
-      <Element
+      <Label name={name} />
+      <Input
+        type={type}
+        element={element}
+        placeholder={placeholder}
+        defaultValue={defaultValue}
+        addClasses={addClasses}
+      />
+      {/* <Element
         type={type}
         id={name}
         name={name}
         className={`${inputClass} ${addClasses || ""}`}
         placeholder={placeholder}
         defaultValue={defaultValue}
-      ></Element>
+      ></Element> */}
     </>
   );
 };
@@ -50,8 +82,23 @@ const InputGroup = ({ children }) => {
 };
 
 export const EditTask = () => {
+  const [subtaskInput, setSubtaskInput] = useState("");
   const { task } = useLoaderData();
+  const [subtasks, setSubtasks] = useState(task.subtasks);
+  console.log("subtasks", subtasks);
   const navigate = useNavigate();
+
+  function addSubTask() {
+    setSubtasks([...subtasks, { title: subtaskInput, isCompleted: false }]);
+    setSubtaskInput("");
+  }
+
+  function removeSubTask(title) {
+    setSubtasks((prevSubtasks) => {
+      const updated = prevSubtasks.filter((task) => task.title !== title);
+      return updated;
+    });
+  }
 
   return (
     <Form method="post" id="task-form">
@@ -64,14 +111,14 @@ export const EditTask = () => {
         <InputGroup>
           <h1 className="text-2xl font-bold mb-7">{task.title}</h1>
 
-          <FormInput
+          <LabelInput
             name={"title"}
             placeholder={"e.g Take coffee break"}
             defaultValue={task.title}
-          ></FormInput>
+          ></LabelInput>
         </InputGroup>
         <InputGroup>
-          <FormInput
+          <LabelInput
             name={"description"}
             element={"textarea"}
             placeholder={
@@ -79,25 +126,50 @@ export const EditTask = () => {
             }
             defaultValue={task.description}
             addClasses={"h-36"}
-          ></FormInput>
+          ></LabelInput>
         </InputGroup>
-        <InputGroup>
-          <button
-            type="button"
-            className="text-purple bg-white hover:bg-blue-800 focus:outline-none focus:ring-4 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 "
-          >
-            + Add New Subtask
-          </button>
 
-          <ul>
-            {task.subtasks &&
-              task.subtasks.map((subtask) => (
-                <li key={subtask.title}>
-                  <p className="text-gray">{subtask.title}</p>
-                </li>
-              ))}
-          </ul>
-        </InputGroup>
+        <Label name={"subtasks"} />
+
+        {subtasks &&
+          subtasks.map((subtask, index) => (
+            <div className="flex gap-5" key={subtask.title}>
+              <input
+                className={inputClass}
+                name={`subtask-${index}`}
+                defaultValue={subtask.title}
+                style={{ background: "inherit" }}
+              ></input>
+              <button
+                type="button"
+                onClick={() => removeSubTask(subtask.title)}
+              >
+                X
+              </button>
+            </div>
+          ))}
+        <input
+          type="hidden"
+          name="subtasks"
+          id="subtasks"
+          defaultValue={JSON.stringify(subtasks)}
+        />
+        <input
+          className={inputClass}
+          style={{ background: "inherit" }}
+          placeholder="e.g Call stakeholders"
+          onChange={(e) => setSubtaskInput(e.target.value)}
+          value={subtaskInput}
+        ></input>
+        <button
+          type="button"
+          onClick={addSubTask}
+          className="text-purple bg-white hover:bg-blue-800 focus:outline-none focus:ring-4 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 "
+        >
+          + Add New Subtask
+        </button>
+
+        <Label name={"status"} />
         <button
           type="button"
           className="text-white bg-purple w-full hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
