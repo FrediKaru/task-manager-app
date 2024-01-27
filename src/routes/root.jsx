@@ -1,4 +1,4 @@
-import { Outlet, useLoaderData, redirect } from "react-router-dom";
+import { Outlet, useLoaderData, redirect, useNavigate } from "react-router-dom";
 
 import { getBoards, addBoard } from "../boards";
 
@@ -6,6 +6,7 @@ import { getBoards, addBoard } from "../boards";
 import { Navbar } from "../components/Navbar";
 import { Logo } from "../components/Logo";
 import BoardList from "../components/BoardList";
+import { useEffect } from "react";
 
 export async function loader() {
   const boards = await getBoards();
@@ -23,7 +24,7 @@ export async function action({ request, params }) {
 
 function Root() {
   const { boards } = useLoaderData();
-  console.log(boards);
+  const navigate = useNavigate();
 
   return (
     <>

@@ -134,12 +134,13 @@ export const EditTask = () => {
         {subtasks &&
           subtasks.map((subtask, index) => (
             <div className="flex gap-5" key={subtask.title}>
-              <input
-                className={inputClass}
+              <p
                 name={`subtask-${index}`}
                 defaultValue={subtask.title}
-                style={{ background: "inherit" }}
-              ></input>
+                style={{ background: "inherit", border: "inherit" }}
+              >
+                {subtask.title}
+              </p>
               <button
                 type="button"
                 onClick={() => removeSubTask(subtask.title)}
@@ -154,13 +155,14 @@ export const EditTask = () => {
           id="subtasks"
           defaultValue={JSON.stringify(subtasks)}
         />
-        <input
-          className={inputClass}
-          style={{ background: "inherit" }}
-          placeholder="e.g Call stakeholders"
-          onChange={(e) => setSubtaskInput(e.target.value)}
-          value={subtaskInput}
-        ></input>
+        <div className="inp-group">
+          <input
+            className={inputClass}
+            placeholder="e.g Call stakeholders"
+            onChange={(e) => setSubtaskInput(e.target.value)}
+            value={subtaskInput}
+          ></input>
+        </div>
         <button
           type="button"
           onClick={addSubTask}
@@ -170,6 +172,17 @@ export const EditTask = () => {
         </button>
 
         <Label name={"status"} />
+        <div className="inp-group">
+          <select
+            defaultvalue={task.status}
+            className={`${inputClass}`}
+            name="status"
+          >
+            <option value="Todo">Todo</option>
+            <option value="Doing">Doing</option>
+            <option value="Doing">Done</option>
+          </select>
+        </div>
         <button
           type="button"
           className="text-white bg-purple w-full hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
