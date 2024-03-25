@@ -104,9 +104,7 @@ export const EditTask = () => {
     <Form method="post" id="task-form">
       <div className="  text-white p-4 w-full flex flex-col gap-5">
         <div className="flex justify-between">
-          <button className="text-gray opacity-50" onClick={() => navigate(-1)}>
-            X
-          </button>
+          <button className="text-gray">X</button>
         </div>
         <InputGroup>
           <h1 className="text-2xl font-bold mb-7">{task.title}</h1>
