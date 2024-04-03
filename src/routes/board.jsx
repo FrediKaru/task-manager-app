@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { useNavigate, NavLink } from "react-router-dom";
+import { useNavigate, NavLink, Outlet } from "react-router-dom";
 import { addTask, getBoard } from "./../boards";
 
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
@@ -31,7 +31,7 @@ export const Board = () => {
   // const inputRef = useRef(null);
 
   const handleCardClick = (task) => {
-    navigate(`/board/${board.id}/cards/${task.title}`);
+    navigate(`cards/${task.title}`);
     ///boards/${board.id}/cards/${task.title}
   };
 
@@ -42,6 +42,10 @@ export const Board = () => {
 
   return (
     <div>
+      {/* <div className="overlay"></div> */}
+      <div className="modal bg-secondary">
+        <Outlet />
+      </div>
       <DragDropContext onDragEnd={() => {}}>
         <div className="grid grid-cols-3 gap-5 text-white ">
           {board.columns.map((column) => (
@@ -68,15 +72,15 @@ export const Board = () => {
                             {...provided.draggableProps}
                             ref={provided.innerRef}
                           >
-                            <NavLink
+                            {/* <NavLink
                               to={`/boards/${board.id}/cards/${task.title}`}
-                            >
-                              <Card
-                                task={task}
-                                completedTasks={completedTasks}
-                                onClick={handleCardClick}
-                              />
-                            </NavLink>
+                            > */}
+                            <Card
+                              task={task}
+                              completedTasks={completedTasks}
+                              onClick={() => handleCardClick(task)}
+                            />
+                            {/* </NavLink> */}
                           </div>
                         )}
                       </Draggable>

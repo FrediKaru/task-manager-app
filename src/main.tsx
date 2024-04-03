@@ -36,14 +36,15 @@ const router = createBrowserRouter([
         element: <Board />,
         action: boardAction,
         loader: boardLoader,
-
         errorElement: <BoardErrorPage />,
-      },
-      {
-        path: "boards/:boardId/cards/:taskTitle",
-        element: <EditTask />,
-        loader: editLoader,
-        action: editAction,
+        children: [
+          {
+            path: "cards/:taskTitle",
+            element: <EditTask />,
+            loader: editLoader,
+            action: editAction,
+          },
+        ],
       },
     ],
   },
