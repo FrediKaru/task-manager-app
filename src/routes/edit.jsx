@@ -74,7 +74,6 @@ const LabelInput = ({
         placeholder={placeholder}
         defaultValue={defaultValue}
         addClasses={addClasses}
-        onChange={handleChange}
       />
     </>
   );
@@ -87,9 +86,7 @@ const InputGroup = ({ children }) => {
 export const EditTask = () => {
   const [subtaskInput, setSubtaskInput] = useState("");
   const { task } = useLoaderData();
-  const [title, setTitle] = useState(task.title);
   const [subtasks, setSubtasks] = useState(task.subtasks);
-  console.log("subtasks", subtasks);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -115,12 +112,11 @@ export const EditTask = () => {
           <button className="text-gray">X</button>
         </div>
         <InputGroup>
-          <h1 className="text-2xl font-bold mb-7">{title}</h1>
+          <h1 className="text-2xl font-bold mb-7">{task.title}</h1>
           <LabelInput
             name={"title"}
             placeholder={"e.g Take coffee break"}
-            defaultValue={title}
-            setTitle={setTitle}
+            defaultValue={task.title}
           ></LabelInput>
         </InputGroup>
         <InputGroup>
@@ -180,7 +176,7 @@ export const EditTask = () => {
         <Label name={"status"} />
         <div className="inp-group">
           <select
-            defaultvalue={task.status}
+            defaultValue={task.status}
             className={`${inputClass}`}
             name="status"
           >
