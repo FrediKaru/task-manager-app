@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useLoaderData, Form, redirect } from "react-router-dom";
 import { getTaskByName, updateTask } from "./../boards";
 
@@ -28,6 +28,7 @@ const Label = ({ name }) => {
 };
 const Input = ({
   name,
+  onChange,
   type = "text",
   element = "input",
   defaultValue = "",
@@ -43,36 +44,38 @@ const Input = ({
       className={`${inputClass} ${addClasses || ""}`}
       placeholder={placeholder}
       defaultValue={defaultValue}
+      onChange={onChange}
     ></Element>
   );
 };
 
 const LabelInput = ({
   name,
+  setTitle,
   type = "text",
   element = "input",
   placeholder = "",
   defaultValue = "",
   addClasses,
 }) => {
+  const handleChange = (e) => {
+    console.log("Value:", e.target.value); // Debugging
+    setTitle(e.target.value);
+  };
+
   return (
     <>
       <Label name={name} />
       <Input
         type={type}
+        id={name}
+        name={name}
         element={element}
         placeholder={placeholder}
         defaultValue={defaultValue}
         addClasses={addClasses}
+        onChange={handleChange}
       />
-      {/* <Element
-        type={type}
-        id={name}
-        name={name}
-        className={`${inputClass} ${addClasses || ""}`}
-        placeholder={placeholder}
-        defaultValue={defaultValue}
-      ></Element> */}
     </>
   );
 };
@@ -84,9 +87,14 @@ const InputGroup = ({ children }) => {
 export const EditTask = () => {
   const [subtaskInput, setSubtaskInput] = useState("");
   const { task } = useLoaderData();
+  const [title, setTitle] = useState(task.title);
   const [subtasks, setSubtasks] = useState(task.subtasks);
   console.log("subtasks", subtasks);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log(task.id);
+  }, []);
 
   function addSubTask() {
     setSubtasks([...subtasks, { title: subtaskInput, isCompleted: false }]);
@@ -107,12 +115,12 @@ export const EditTask = () => {
           <button className="text-gray">X</button>
         </div>
         <InputGroup>
-          <h1 className="text-2xl font-bold mb-7">{task.title}</h1>
-
+          <h1 className="text-2xl font-bold mb-7">{title}</h1>
           <LabelInput
             name={"title"}
             placeholder={"e.g Take coffee break"}
-            defaultValue={task.title}
+            defaultValue={title}
+            setTitle={setTitle}
           ></LabelInput>
         </InputGroup>
         <InputGroup>
