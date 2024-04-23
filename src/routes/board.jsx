@@ -1,9 +1,8 @@
-import React, { useRef, useState } from "react";
-import { useNavigate, NavLink, Outlet } from "react-router-dom";
+import { useNavigate, Outlet } from "react-router-dom";
 import { addTask, getBoard } from "./../boards";
 
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { useLoaderData, Form } from "react-router-dom";
+import { useLoaderData } from "react-router-dom";
 import { Card } from "../components/Card";
 import { AddCard } from "../components/AddCard";
 

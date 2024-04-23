@@ -51,18 +51,12 @@ const Input = ({
 
 const LabelInput = ({
   name,
-  setTitle,
   type = "text",
   element = "input",
   placeholder = "",
   defaultValue = "",
   addClasses,
 }) => {
-  const handleChange = (e) => {
-    console.log("Value:", e.target.value); // Debugging
-    setTitle(e.target.value);
-  };
-
   return (
     <>
       <Label name={name} />
@@ -130,7 +124,6 @@ export const EditTask = () => {
             addClasses={"h-36"}
           ></LabelInput>
         </InputGroup>
-
         <Label name={"subtasks"} />
 
         {subtasks &&
