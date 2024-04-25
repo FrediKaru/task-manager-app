@@ -48,7 +48,7 @@ export const Board = () => {
     ) {
       return;
     }
-
+    // create shallow copy of the board
     let updatedBoard = { ...activeBoard };
 
     const sourceColumnIndex = updatedBoard.columns.findIndex(
@@ -57,11 +57,12 @@ export const Board = () => {
     const destinationColumnIndex = updatedBoard.columns.findIndex(
       (column) => column.name === destination.droppableId
     );
-
+    // remove dragged item from the source column and save it
     const [movedItem] = updatedBoard.columns[sourceColumnIndex].tasks.splice(
       source.index,
       1
     );
+    // add saved item to the destination column
     updatedBoard.columns[destinationColumnIndex].tasks.splice(
       destination.index,
       0,
