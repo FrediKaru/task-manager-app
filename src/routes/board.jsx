@@ -38,7 +38,7 @@ export const Board = () => {
     const completedTasks = tasks.filter((task) => task.isCompleted === true);
     return completedTasks.length;
   }
-
+  const colors = ["bg-list0", "bg-list1", "bg-list2", "bg-list3", "bg-list4"];
   return (
     <div>
       {/* <div className="overlay"></div> */}
@@ -47,10 +47,14 @@ export const Board = () => {
       </div>
       <DragDropContext onDragEnd={() => {}}>
         <div className="grid grid-cols-3 gap-5 text-white ">
-          {board.columns.map((column) => (
+          {board.columns.map((column, index) => (
             <div key={column.name}>
               <div className="flex items-center gap-2">
-                <div className={`bg-todo w-4 h-4 rounded-full`}></div>
+                <div
+                  className={`${
+                    colors[index % colors.length]
+                  } w-4 h-4 rounded-full`}
+                ></div>
                 <span className="text-gray text-xs uppercase tracking-widest">
                   {column.name} ({column.tasks.length})
                 </span>
