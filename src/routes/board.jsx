@@ -10,9 +10,7 @@ import { useState } from "react";
 export async function action({ request, params }) {
   const formData = await request.formData();
   const newTask = Object.fromEntries(formData);
-  // console.log("formData name is:", newTask.title);
-  // console.log("formData column is:", newTask.columnName);
-  // console.log("action triggered in board");
+
   await addTask(params.boardId, newTask.columnName, newTask);
   return null;
 }
@@ -26,10 +24,6 @@ export const Board = () => {
   const navigate = useNavigate();
   const { board } = useLoaderData();
   const [activeBoard, setActiveBoard] = useState(board);
-
-  // const [userInput, setUserInput] = useState("");
-  // const [userClicked, setUserClicked] = useState(false);
-  // const inputRef = useRef(null);
 
   const handleCardClick = (task) => {
     navigate(`cards/${task.title}`);
