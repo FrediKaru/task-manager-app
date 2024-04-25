@@ -31,6 +31,16 @@ export async function getBoards(query) {
   //   if (!boards) boards = [];
   return boards;
 }
+export async function saveBoard(updatedBoard) {
+  console.log("updated board is: ", updatedBoard);
+  await fakeNetwork(`board:${updatedBoard.name}`);
+  let boards = await localforage.getItem("boards");
+  let updatedBoardIndex = boards.findIndex(
+    (board) => board.name === updatedBoard.name
+  );
+  boards[updatedBoardIndex] = updatedBoard;
+  await set(boards);
+}
 
 export async function getBoard(id) {
   console.log(id);

@@ -1,11 +1,11 @@
 import { useNavigate, Outlet } from "react-router-dom";
-import { addTask, getBoard } from "./../boards";
+import { addTask, getBoard, saveBoard } from "./../boards";
 
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useLoaderData } from "react-router-dom";
 import { Card } from "../components/Card";
 import { AddCard } from "../components/AddCard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export async function action({ request, params }) {
   const formData = await request.formData();
@@ -24,6 +24,10 @@ export const Board = () => {
   const navigate = useNavigate();
   const { board } = useLoaderData();
   const [activeBoard, setActiveBoard] = useState(board);
+
+  useEffect(() => {
+    saveBoard(activeBoard);
+  }, [activeBoard]);
 
   const handleCardClick = (task) => {
     navigate(`cards/${task.title}`);
