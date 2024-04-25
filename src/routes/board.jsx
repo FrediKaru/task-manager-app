@@ -5,6 +5,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useLoaderData } from "react-router-dom";
 import { Card } from "../components/Card";
 import { AddCard } from "../components/AddCard";
+import { useState } from "react";
 
 export async function action({ request, params }) {
   const formData = await request.formData();
@@ -24,6 +25,7 @@ export async function loader({ params }) {
 export const Board = () => {
   const navigate = useNavigate();
   const { board } = useLoaderData();
+  const [activeBoard, setActiveBoard] = useState(board);
 
   // const [userInput, setUserInput] = useState("");
   // const [userClicked, setUserClicked] = useState(false);
@@ -39,15 +41,50 @@ export const Board = () => {
     return completedTasks.length;
   }
   const colors = ["bg-list0", "bg-list1", "bg-list2", "bg-list3", "bg-list4"];
+
+  const onDragEnd = (result) => {
+    const { source, destination } = result;
+    console.log(source);
+    if (!destination) {
+      return;
+    }
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      return;
+    }
+
+    let updatedBoard = { ...activeBoard };
+
+    const sourceColumnIndex = updatedBoard.columns.findIndex(
+      (column) => column.name === source.droppableId
+    );
+    const destinationColumnIndex = updatedBoard.columns.findIndex(
+      (column) => column.name === destination.droppableId
+    );
+
+    const [movedItem] = updatedBoard.columns[sourceColumnIndex].tasks.splice(
+      source.index,
+      1
+    );
+    updatedBoard.columns[destinationColumnIndex].tasks.splice(
+      destination.index,
+      0,
+      movedItem
+    );
+
+    setActiveBoard(updatedBoard);
+  };
   return (
     <div>
       {/* <div className="overlay"></div> */}
       <div className="modal bg-secondary">
         <Outlet />
       </div>
-      <DragDropContext onDragEnd={() => {}}>
+      <DragDropContext onDragEnd={onDragEnd}>
         <div className="grid grid-cols-3 gap-5 text-white ">
-          {board.columns.map((column, index) => (
+          {activeBoard.columns.map((column, index) => (
             <div key={column.name}>
               <div className="flex items-center gap-2">
                 <div
