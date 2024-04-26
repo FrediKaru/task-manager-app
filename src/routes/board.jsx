@@ -1,11 +1,18 @@
-import { useNavigate, Outlet, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import {
+  useNavigate,
+  Outlet,
+  useParams,
+  useLoaderData,
+} from "react-router-dom";
+
+// database/storage functions
 import { addTask, getBoard, saveBoard } from "./../boards";
 
+// components
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { useLoaderData } from "react-router-dom";
 import { Card } from "../components/Card";
 import { AddCard } from "../components/AddCard";
-import { useEffect, useState } from "react";
 
 export async function action({ request, params }) {
   const formData = await request.formData();
@@ -26,8 +33,8 @@ export const Board = () => {
   const { board } = useLoaderData();
   const [activeBoard, setActiveBoard] = useState(board);
 
+  // load board data whenever different URL is opened
   useEffect(() => {
-    // load board data whenever different URL is opened
     const fetchBoardData = async () => {
       const newBoard = await getBoard(params.boardId);
       setActiveBoard(newBoard);
