@@ -51,9 +51,7 @@ export const Navbar = () => {
         </h2>
       )}
 
-      <button className="bg-purple rounded-full px-5 py-3">
-        + Add new Task
-      </button>
+      <button className="bg-purple rounded-full text-sm w-10 h-10">FK</button>
     </div>
   );
 };
