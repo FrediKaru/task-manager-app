@@ -1,4 +1,4 @@
-import { useNavigate, Outlet } from "react-router-dom";
+import { useNavigate, Outlet, useParams } from "react-router-dom";
 import { addTask, getBoard, saveBoard } from "./../boards";
 
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
@@ -22,8 +22,18 @@ export async function loader({ params }) {
 
 export const Board = () => {
   const navigate = useNavigate();
+  const params = useParams();
   const { board } = useLoaderData();
   const [activeBoard, setActiveBoard] = useState(board);
+
+  useEffect(() => {
+    // load board data whenever different URL is opened
+    const fetchBoardData = async () => {
+      const newBoard = await getBoard(params.boardId);
+      setActiveBoard(newBoard);
+    };
+    fetchBoardData();
+  }, [params.boardId]);
 
   useEffect(() => {
     saveBoard(activeBoard);
