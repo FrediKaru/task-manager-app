@@ -38,7 +38,7 @@ function Root() {
           </div>
         </div>
         <div className="flex flex-row flex-grow bg-secondary">
-          <div id="sidebar">
+          <div id="sidebar" className="hidden lg:block">
             <BoardList boards={boards} />
           </div>
           <div className="content bg-primary flex-grow">
