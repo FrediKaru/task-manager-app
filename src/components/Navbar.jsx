@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getBoard, saveBoardName } from "../boards";
+import DropdownButton from "./Dropdown";
 
 export const Navbar = () => {
   const { boardId } = useParams();
@@ -43,15 +44,29 @@ export const Navbar = () => {
           onBlur={handleSave}
         ></input>
       ) : (
-        <h2
-          className="text-xl font-bold dark:text-white"
-          onClick={handleEditing}
-        >
-          {title}
-        </h2>
+        <div className="flex">
+          <h2
+            className="text-xl font-bold dark:text-white  hidden lg:block"
+            onClick={handleEditing}
+          >
+            {title}
+          </h2>
+          <div className="text-md flex">
+            <div className="flex lg:hidden font-medium dark:text-white">
+              <h2>Boards</h2>
+            </div>
+            <DropdownButton
+              options={["one", "three"]}
+              title={title}
+              onClick={console.log("bang")}
+            />
+          </div>
+        </div>
       )}
 
-      <button className="bg-purple rounded-full text-sm w-10 h-10">FK</button>
+      <button className="bg-purple rounded-full text-sm w-10 h-10 ml-auto">
+        FK
+      </button>
     </div>
   );
 };
