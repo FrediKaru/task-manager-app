@@ -72,9 +72,11 @@ export const Board = () => {
     // create shallow copy of the board
     let updatedBoard = { ...activeBoard };
 
+    // get source column index from droppableId (column name)
     const sourceColumnIndex = updatedBoard.columns.findIndex(
       (column) => column.name === source.droppableId
     );
+    // get destination column index from droppableId (column name)
     const destinationColumnIndex = updatedBoard.columns.findIndex(
       (column) => column.name === destination.droppableId
     );
