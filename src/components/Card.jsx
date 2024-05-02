@@ -3,7 +3,7 @@ import React from "react";
 export function Card({ task, onClick, completedTasks }) {
   return (
     <div
-      className=" bg-secondary rounded-lg my-2 px-3 py-5 cursor-pointer"
+      className=" bg-secondary rounded-lg my-2 px-3 py-5 cursor-pointer text-white"
       onClick={onClick}
     >
       <h4>{task.title}</h4>
