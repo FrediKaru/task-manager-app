@@ -101,10 +101,10 @@ export const Board = () => {
         <Outlet />
       </div>
       <DragDropContext onDragEnd={onDragEnd}>
-        <div className="grid grid-cols-3 gap-5 text-white ">
+        <div className="horizontal-scroll-wrapper max-w-sm">
           {activeBoard.columns.map((column, index) => (
             <div key={column.name}>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-row items-center gap-2 ">
                 <div
                   className={`${
                     colors[index % colors.length]
@@ -153,6 +153,7 @@ export const Board = () => {
               />
             </div>
           ))}
+          <h2>Add new Column</h2>
         </div>
       </DragDropContext>
       {/* <Routes>

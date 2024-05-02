@@ -26,25 +26,21 @@ function Root() {
 
   return (
     <>
-      <div className="flex flex-col h-screen">
+      <div className="flex flex-col h-screen w-full main">
         <div className="flex flex-row">
           <div className="logo bg-secondary col-span-1 row-span-1 flex items-center">
             <Logo />
           </div>
-          <div className="navbar bg-secondary flex-grow">
-            <div className="mx-4">
-              <Navbar />
-            </div>
+          <div className="navbar bg-secondary flex flex-grow  px-4">
+            <Navbar />
           </div>
         </div>
-        <div className="flex flex-row flex-grow bg-secondary">
+        <div className="flex flex-row bg-secondary w-full grow">
           <div id="sidebar" className="hidden lg:block">
             <BoardList boards={boards} />
           </div>
-          <div className="content bg-primary flex-grow">
-            <div className="mx-4 mt-10">
-              <Outlet />
-            </div>
+          <div className="content bg-primary p-4  ">
+            <Outlet />
           </div>
         </div>
       </div>
