@@ -15,6 +15,7 @@ export const Navbar = () => {
   async function handleSave() {
     console.log("save happened");
     await saveBoardName(boardId, title);
+    window.location.reload();
     handleEditing();
   }
 
@@ -35,7 +36,7 @@ export const Navbar = () => {
   // }, [title]);
 
   return (
-    <div className=" bg-secondary text-white py-4 flex flex-row justify-between  items-center">
+    <div className="flex grow  bg-secondary text-white py-4   items-center justify-between">
       {isEditing ? (
         <input
           value={title}
@@ -44,9 +45,9 @@ export const Navbar = () => {
           onBlur={handleSave}
         ></input>
       ) : (
-        <div className="flex">
+        <div>
           <h2
-            className="text-xl font-bold dark:text-white  hidden lg:block"
+            className="text-xl font-bold dark:text-white  hidden lg:block mr-auto"
             onClick={handleEditing}
           >
             {title}
@@ -63,10 +64,9 @@ export const Navbar = () => {
           </div>
         </div>
       )}
-
-      <button className="bg-purple rounded-full text-sm w-10 h-10 ml-auto">
-        FK
-      </button>
+      <div className="bg-purple rounded-full text-sm w-10 h-10 flex items-center justify-center">
+        <span>FK</span>
+      </div>
     </div>
   );
 };
