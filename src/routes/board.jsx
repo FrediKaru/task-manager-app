@@ -14,14 +14,16 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { Card } from "../components/Card";
 import { AddCard } from "../components/AddCard";
 
+// handle formdata submit when task is added
 export async function action({ request, params }) {
   const formData = await request.formData();
   const newTask = Object.fromEntries(formData);
 
   await addTask(params.boardId, newTask.columnName, newTask);
+  window.location.reload();
   return null;
 }
-
+// load board through url navigation board id
 export async function loader({ params }) {
   const board = await getBoard(params.boardId);
   return { board };
@@ -34,11 +36,11 @@ export const Board = () => {
   const [activeBoard, setActiveBoard] = useState(board);
 
   // load board data whenever different URL is opened
+  const fetchBoardData = async () => {
+    const newBoard = await getBoard(params.boardId);
+    setActiveBoard(newBoard);
+  };
   useEffect(() => {
-    const fetchBoardData = async () => {
-      const newBoard = await getBoard(params.boardId);
-      setActiveBoard(newBoard);
-    };
     fetchBoardData();
   }, [params.boardId]);
 
@@ -48,7 +50,6 @@ export const Board = () => {
 
   const handleCardClick = (task) => {
     navigate(`cards/${task.title}`);
-    ///boards/${board.id}/cards/${task.title}
   };
 
   function completedTasks(tasks) {
@@ -95,15 +96,14 @@ export const Board = () => {
     setActiveBoard(updatedBoard);
   };
   return (
-    <div>
-      {/* <div className="overlay"></div> */}
+    <div className="flex h-full">
       <div className="modal bg-secondary">
         <Outlet />
       </div>
       <DragDropContext onDragEnd={onDragEnd}>
-        <div className="horizontal-scroll-wrapper max-w-sm">
+        <div className="flex horizontal-scroll-wrapper">
           {activeBoard.columns.map((column, index) => (
-            <div key={column.name}>
+            <div key={column.name} className="">
               <div className="flex flex-row items-center gap-2 ">
                 <div
                   className={`${
@@ -143,22 +143,17 @@ export const Board = () => {
                         )}
                       </Draggable>
                     ))}
+                    <AddCard
+                      columnName={column.name}
+                      fetchBoard={fetchBoardData}
+                    />
                   </div>
                 )}
               </Droppable>
-
-              <AddCard
-                columnName={column.name}
-                // refreshPage={refreshPage}
-              />
             </div>
           ))}
-          <h2>Add new Column</h2>
         </div>
       </DragDropContext>
-      {/* <Routes>
-        <Route path="boards/:boardsId/cards/:cardId" element={<EditModal />} />
-      </Routes> */}
     </div>
   );
 };
