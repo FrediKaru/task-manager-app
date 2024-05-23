@@ -31,10 +31,6 @@ export const Navbar = () => {
     fetchData();
   }, [boardId]);
 
-  // useEffect(() => {
-  //   console.log(title);
-  // }, [title]);
-
   return (
     <div className="flex grow  bg-secondary text-white py-4   items-center justify-between">
       {isEditing ? (
