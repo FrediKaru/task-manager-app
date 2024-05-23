@@ -31,10 +31,6 @@ export const EditModal = ({ reloadPage }) => {
     reloadPage();
   }
 
-  // useEffect(() => {
-  //   console.log("formData is", JSON.stringify(formData));
-  // }, [formData]);
-
   return (
     <div className="  text-white p-4 w-full flex flex-col gap-5">
       <div className="flex justify-between">
