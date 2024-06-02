@@ -6,6 +6,7 @@ import { getBoards, addBoard } from "../boards";
 import { Navbar } from "../components/Navbar";
 import { Logo } from "../components/Logo";
 import BoardList from "../components/BoardList";
+import { useState } from "react";
 
 export async function loader() {
   const boards = await getBoards();
@@ -23,10 +24,15 @@ export async function action({ request, params }) {
 
 function Root() {
   const { boards } = useLoaderData();
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const toggleModal = () => {
+    setModalOpen(!isModalOpen);
+  };
 
   return (
     <>
-      <div className="flex flex-col h-screen w-full main">
+      <div className={`main flex flex-col h-screen w-full`}>
         <div className="flex flex-row">
           <div className="logo bg-secondary col-span-1 row-span-1 flex items-center">
             <Logo />
@@ -40,7 +46,7 @@ function Root() {
             <BoardList boards={boards} />
           </div>
           <div className="content bg-primary p-4  ">
-            <Outlet />
+            <Outlet context={{ toggleModal }} />
           </div>
         </div>
       </div>
