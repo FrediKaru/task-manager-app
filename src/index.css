@@ -2,12 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  --left-padding: 1.5rem;
+  box-sizing: border-box;
+}
+
 * {
   padding: 0px;
 }
-
-html {
-  --left-padding: 1.5rem;
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
 }
 
 /* .logo,
@@ -16,9 +22,22 @@ html {
   padding: 10px 20px;
 } */
 
+/* .main {
+  max-width: 100%;
+  overflow: hidden;
+} */
+
 .logo,
 #sidebar {
   min-width: 200px;
+}
+.content {
+  overflow: scroll;
+}
+
+.content,
+.navbar {
+  flex-grow: 1;
 }
 .logo {
   padding-left: var(--left-padding);
@@ -58,8 +77,8 @@ nav h1 {
 }
 
 .modal {
-  position: fixed;
-  top: 50%;
+  position: absolute;
+  top: 52%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 100%;
@@ -76,3 +95,25 @@ nav h1 {
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 1;
 }
+
+.horizontal-scroll-wrapper {
+  flex: 1;
+  display: flex;
+  flex-wrap: nowrap;
+  max-width: 100%;
+  overflow-x: scroll;
+  gap: 30px;
+  flex-grow: 1;
+  min-height: 100%;
+}
+
+.horizontal-scroll-wrapper > div {
+  flex: 0 0 auto;
+  width: 400px;
+  height: auto;
+}
+
+/* .testing1 {
+  overflow: hidden;
+  width: 50%;
+} */
