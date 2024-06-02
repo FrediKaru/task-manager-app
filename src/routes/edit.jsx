@@ -101,7 +101,7 @@ export const EditTask = () => {
 
   return (
     <Form method="post" id="task-form">
-      <div className="  text-white p-4 w-full flex flex-col gap-5">
+      <div className="  text-white bg-primary rounded-lg p-4 w-full flex flex-col gap-5">
         <div className="flex justify-between">
           <button className="text-gray">X</button>
         </div>
