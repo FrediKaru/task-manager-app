@@ -4,6 +4,7 @@ import {
   Outlet,
   useParams,
   useLoaderData,
+  useOutletContext,
 } from "react-router-dom";
 
 // database/storage functions
@@ -30,6 +31,7 @@ export async function loader({ params }) {
 }
 
 export const Board = () => {
+  const { toggleModal } = useOutletContext();
   const navigate = useNavigate();
   const params = useParams();
   const { board } = useLoaderData();
@@ -49,6 +51,7 @@ export const Board = () => {
   }, [activeBoard]);
 
   const handleCardClick = (task) => {
+    toggleModal();
     navigate(`cards/${task.title}`);
   };
 
@@ -97,7 +100,7 @@ export const Board = () => {
   };
   return (
     <div className="flex h-full">
-      <div className="modal bg-secondary">
+      <div className="modal">
         <Outlet />
       </div>
       <DragDropContext onDragEnd={onDragEnd}>
