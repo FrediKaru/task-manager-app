@@ -1,9 +1,23 @@
+import { initializeApp } from "firebase/app";
+import { getDatabase, onValue, ref, set, get } from "firebase/database";
+import { v4 as uuidv4 } from "uuid";
+
+const userIdExample = "0caef751-fef4-41bd-9207-c06886b9605e";
+
+const firebaseConfig = {
+  databaseURL:
+    "https://task-app-9b589-default-rtdb.europe-west1.firebasedatabase.app/",
+};
+// initialize Firebase
+const app = initializeApp(firebaseConfig);
+const database = getDatabase(app);
+
 import localforage from "localforage";
+import { data } from "autoprefixer";
 // import { matchSorter } from "match-sorter";
 
 export async function loadBoards() {
-  console.log("loadboards triggered");
-
+  console.log("loading function triggeed");
   try {
     const url = "src/api/data.json";
     const response = await fetch(url);
@@ -13,42 +27,89 @@ export async function loadBoards() {
     }
     const savedBoards = await response.json();
     console.log(savedBoards);
-    set(savedBoards.boards);
+
+    // set(ref(database, "users/" + userIdExample), {
+    //   boards: savedBoards.boards,
+    //   username: "fredi902",
+    // });
   } catch (error) {
     console.error("Errorss fetching tasks", error);
   }
 }
+// addNewUserToDatabase("0caef751-fef4-41bd-9207-c06886b9605e", "fredi08");
 
-export async function getBoards(query) {
-  console.log("getboards triggered");
+// const likesCount = ref(database, "users/" + userIdExample + "/likes");
+// onValue(likesCount, (snapshot) => {
+//   const data = snapshot.val();
+//   console.log("likes count is", data);
+// });
+
+export async function getBoards(
+  userID = "0caef751-fef4-41bd-9207-c06886b9605e",
+  query
+) {
   await fakeNetwork(`getBoards:${query}`);
-  let boards = await localforage.getItem("boards");
-  if (!boards) {
-    loadBoards();
-    let boards = await localforage.getItem("boards");
-    return boards;
-  }
+  const boardsRef = ref(database, "users/" + userID + "/boards");
+
+  return new Promise((resolve, reject) => {
+    onValue(
+      boardsRef,
+      (snapshot) => {
+        const data = snapshot.val();
+        resolve(data);
+      },
+      (error) => {
+        reject(error);
+      }
+    );
+  });
+
   //   if (!boards) boards = [];
-  return boards;
 }
-export async function saveBoard(updatedBoard) {
-  console.log("updated board is: ", updatedBoard);
-  await fakeNetwork(`board:${updatedBoard.name}`);
-  let boards = await localforage.getItem("boards");
-  let updatedBoardIndex = boards.findIndex(
-    (board) => board.name === updatedBoard.name
-  );
-  boards[updatedBoardIndex] = updatedBoard;
-  await set(boards);
+export async function saveBoard(id, updatedBoard) {
+  let userID = "0caef751-fef4-41bd-9207-c06886b9605e";
+
+  const boardRef = ref(database, `users/${userID}/boards/${id}`);
+
+  try {
+    await set(boardRef, updatedBoard);
+
+    //fetch the updated list of boards after updating firebase
+    const boardsRef = ref(database, `users/${userID}/boards`);
+    const snapshot = await get(boardsRef);
+    const data = snapshot.val();
+
+    if (data) {
+      const updatedBoards = Object.keys(data).map((key) => ({
+        id: key,
+        ...data[key],
+      }));
+      return updatedBoards;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    console.log("Error updating board:", error);
+    throw error;
+  }
 }
 
 export async function getBoard(id) {
-  console.log(id);
-  await fakeNetwork(`board:${id}`);
-  let boards = await localforage.getItem("boards");
-  let board = boards.find((board) => board.id == id);
-  console.log(board);
-  return board ?? null;
+  let userID = "0caef751-fef4-41bd-9207-c06886b9605e";
+
+  const boardRef = ref(database, "users/" + userID + "/boards/" + id);
+  return new Promise((resolve, reject) => {
+    onValue(
+      boardRef,
+      (snapshot) => {
+        const data = snapshot.val();
+        resolve(data);
+      },
+      (error) => {
+        reject(error);
+      }
+    );
+  });
 }
 
 export async function getTaskByName(taskName) {
@@ -78,7 +139,7 @@ export async function saveTask(oldTask, updatedTask) {
       }
     }
   }
-  localforage.setItem("boards", boards);
+  localforage.setForageItem("boards", boards);
 }
 
 export async function updateTask(oldTitle, updates) {
@@ -91,7 +152,7 @@ export async function updateTask(oldTitle, updates) {
       for (const task of column.tasks) {
         if (task.title === oldTitle) {
           Object.assign(task, updates);
-          await set(boards);
+          await setForage(boards);
           return task;
         }
       }
@@ -136,7 +197,7 @@ export async function addBoard(name, id) {
       ],
     },
   ];
-  await localforage.setItem("boards", updatedBoards);
+  await localforage.setForageItem("boards", updatedBoards);
 }
 
 export async function addTask(boardId, columnName, newTask) {
@@ -156,7 +217,7 @@ export async function addTask(boardId, columnName, newTask) {
       }
     }
   }
-  await localforage.setItem("boards", boards);
+  await localforage.setForageItem("boards", boards);
 }
 
 export async function saveBoardName(id, newName) {
@@ -176,7 +237,7 @@ export async function saveBoardName(id, newName) {
       return board;
     });
     console.log("updated boards:", boardsNew);
-    await localforage.setItem("boards", boardsNew);
+    await localforage.setForageItem("boards", boardsNew);
   } else {
     console.log("Error: Unable to update board title");
   }
@@ -190,12 +251,31 @@ export async function createBoard() {
   let board = { id, createdAt: Date.now() };
   let boards = await getBoards();
   boards.unshift(board);
-  await set(boards);
+  await setForage(boards);
   return board;
 }
+async function addNewUserToDatabase(userID, username) {
+  set(ref(database, "users/" + userID), {
+    username: username,
+    boards: [2, 3, 5],
+  });
+}
 
-function set(boards) {
-  return localforage.setItem("boards", boards);
+async function setForage(boards) {
+  const user = {
+    name: "Fredi",
+    userID: "436424",
+    boards: boards,
+  };
+  try {
+    // set(ref(database, `users`), {
+    //   boards: boards,
+    // });
+  } catch (error) {
+    console.error("Error writing data: ", error);
+  }
+
+  return localforage.setForageItem("boards", boards);
 }
 
 // fake a cache so we don't slow down stuff we've already seen
