@@ -17,7 +17,6 @@ export async function action({ request, params }) {
   const formData = await request.formData();
   const newForm = Object.fromEntries(formData);
   const id = await Math.random();
-  console.log("new id", id);
   await addBoard(newForm.name, id);
   return redirect(`/boards/${id}`);
 }
