@@ -13,7 +13,6 @@ export const Navbar = () => {
   }
 
   async function handleSave() {
-    console.log("save happened");
     await saveBoardName(boardId, title);
     window.location.reload();
     handleEditing();
@@ -52,11 +51,7 @@ export const Navbar = () => {
             <div className="flex lg:hidden font-medium dark:text-white">
               <h2>Boards</h2>
             </div>
-            <DropdownButton
-              options={["one", "three"]}
-              title={title}
-              onClick={console.log("bang")}
-            />
+            <DropdownButton options={["one", "three"]} title={title} />
           </div>
         </div>
       )}
