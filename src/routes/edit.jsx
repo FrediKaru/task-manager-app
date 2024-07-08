@@ -15,7 +15,7 @@ export async function action({ request, params }) {
 }
 
 export async function loader({ params }) {
-  const task = await getTaskByName(params.taskTitle);
+  const task = await getTaskByName(params.boardId, params.taskTitle);
   return { task };
 }
 const Label = ({ name }) => {

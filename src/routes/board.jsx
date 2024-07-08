@@ -8,7 +8,14 @@ import {
 } from "react-router-dom";
 
 // database/storage functions
-import { addTask, getBoard, saveBoard } from "./../boards";
+import {
+  addTask,
+  getBoards,
+  getCardById,
+  getColumnDataById,
+  saveBoard,
+  useBoard,
+} from "./../boards";
 
 // components
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
@@ -24,30 +31,39 @@ export async function action({ request, params }) {
   window.location.reload();
   return null;
 }
-// load board through url navigation board id
+
+// load board through URL navigation board id
 export async function loader({ params }) {
   const board = await getBoard(params.boardId);
+  console.log("board in loader is", board);
   return { board };
 }
 
 export const Board = () => {
   const { toggleModal } = useOutletContext();
   const navigate = useNavigate();
-  const params = useParams();
-  const { board } = useLoaderData();
-  const [activeBoard, setActiveBoard] = useState(board);
+  const boardId = useParams();
+  // const { board } = useLoaderData();
+  const { data: board, isLoading, error } = useBoard(boardId);
+  const [columns, setColumns] = useState([]);
+  // const [activeBoard, setActiveBoard] = useState(board);
 
   // load board data whenever different URL is opened
   const fetchBoardData = async () => {
     const newBoard = await getBoard(params.boardId);
     setActiveBoard(newBoard);
   };
-  useEffect(() => {
-    fetchBoardData();
-  }, [params.boardId]);
+
+  // useEffect(() => {
+  //   if(board) {
+  //     const fetchColumns = async () => {
+  //       const columnPromises = Object.keys(board.columnIds).map((columnId) => ()
+  //     }
+  //   }
+  // })
 
   useEffect(() => {
-    saveBoard(activeBoard);
+    saveBoard(params.boardId, activeBoard);
   }, [activeBoard]);
 
   const handleCardClick = (task) => {
@@ -56,23 +72,25 @@ export const Board = () => {
   };
 
   function completedTasks(tasks) {
-    const completedTasks = tasks.filter((task) => task.isCompleted === true);
-    return completedTasks.length;
+    return tasks.filter((task) => task.isCompleted === true).length;
   }
+
   const colors = ["bg-list0", "bg-list1", "bg-list2", "bg-list3", "bg-list4"];
 
   const onDragEnd = (result) => {
     const { source, destination } = result;
-    console.log(source);
+
     if (!destination) {
       return;
     }
+
     if (
       destination.droppableId === source.droppableId &&
       destination.index === source.index
     ) {
       return;
     }
+
     // create shallow copy of the board
     let updatedBoard = { ...activeBoard };
 
@@ -80,15 +98,18 @@ export const Board = () => {
     const sourceColumnIndex = updatedBoard.columns.findIndex(
       (column) => column.name === source.droppableId
     );
+
     // get destination column index from droppableId (column name)
     const destinationColumnIndex = updatedBoard.columns.findIndex(
       (column) => column.name === destination.droppableId
     );
+
     // remove dragged item from the source column and save it
     const [movedItem] = updatedBoard.columns[sourceColumnIndex].tasks.splice(
       source.index,
       1
     );
+
     // add saved item to the destination column
     updatedBoard.columns[destinationColumnIndex].tasks.splice(
       destination.index,
@@ -98,6 +119,7 @@ export const Board = () => {
 
     setActiveBoard(updatedBoard);
   };
+
   return (
     <div className="flex h-full">
       <div className="modal">
@@ -105,56 +127,61 @@ export const Board = () => {
       </div>
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="flex horizontal-scroll-wrapper">
-          {activeBoard.columns.map((column, index) => (
-            <div key={column.name} className="">
-              <div className="flex flex-row items-center gap-2 ">
-                <div
-                  className={`${
-                    colors[index % colors.length]
-                  } w-4 h-4 rounded-full`}
-                ></div>
-                <span className="text-gray text-xs uppercase tracking-widest">
-                  {column.name} ({column.tasks.length})
-                </span>
-              </div>
+          {Object.keys(activeBoard.lists).map((key, index) => {
+            const column = getColumnDataById(key);
+            console.log("key of column is", key);
 
-              <Droppable droppableId={column.name} type="group">
-                {(provided) => (
-                  <div {...provided.droppableProps} ref={provided.innerRef}>
-                    {column.tasks.map((task, index) => (
-                      <Draggable
-                        draggableId={task.title}
-                        key={task.title}
-                        index={index}
-                      >
-                        {(provided) => (
-                          <div
-                            {...provided.dragHandleProps}
-                            {...provided.draggableProps}
-                            ref={provided.innerRef}
+            return (
+              <div key={column.listName} className="">
+                <div className="flex flex-row items-center gap-2">
+                  <div
+                    className={`${
+                      colors[index % colors.length]
+                    } w-4 h-4 rounded-full`}
+                  ></div>
+                  <span className="text-gray text-xs uppercase tracking-widest">
+                    {column.name}
+                  </span>
+                </div>
+
+                <Droppable droppableId={column.name} type="group">
+                  {(provided) => (
+                    <div {...provided.droppableProps} ref={provided.innerRef}>
+                      {console.log("hey, column.tasks is", column)}
+                      {Object.keys(column.tasks).map((key, index) => {
+                        const task = getCardById(key);
+                        return (
+                          <Draggable
+                            draggableId={task.title}
+                            key={task.title}
+                            index={taskIndex}
                           >
-                            {/* <NavLink
-                              to={`/boards/${board.id}/cards/${task.title}`}
-                            > */}
-                            <Card
-                              task={task}
-                              completedTasks={completedTasks}
-                              onClick={() => handleCardClick(task)}
-                            />
-                            {/* </NavLink> */}
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
-                    <AddCard
-                      columnName={column.name}
-                      fetchBoard={fetchBoardData}
-                    />
-                  </div>
-                )}
-              </Droppable>
-            </div>
-          ))}
+                            {(provided) => (
+                              <div
+                                {...provided.dragHandleProps}
+                                {...provided.draggableProps}
+                                ref={provided.innerRef}
+                              >
+                                <Card
+                                  task={task}
+                                  completedTasks={completedTasks}
+                                  onClick={() => handleCardClick(task)}
+                                />
+                              </div>
+                            )}
+                          </Draggable>
+                        );
+                      })}
+                      <AddCard
+                        columnName={column.name}
+                        fetchBoard={fetchBoardData}
+                      />
+                    </div>
+                  )}
+                </Droppable>
+              </div>
+            );
+          })}
         </div>
       </DragDropContext>
     </div>

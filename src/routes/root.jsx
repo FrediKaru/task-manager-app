@@ -1,6 +1,13 @@
 import { Outlet, useLoaderData, redirect } from "react-router-dom";
-
 import { getBoards, addBoard } from "../boards";
+
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 
 // Components
 import { Navbar } from "../components/Navbar";
@@ -21,6 +28,8 @@ export async function action({ request, params }) {
   return redirect(`/boards/${id}`);
 }
 
+const queryClient = new QueryClient();
+
 function Root() {
   const { boards } = useLoaderData();
   const [isModalOpen, setModalOpen] = useState(false);
@@ -31,24 +40,26 @@ function Root() {
 
   return (
     <>
-      <div className={`main flex flex-col h-screen w-full`}>
-        <div className="flex flex-row">
-          <div className="logo bg-secondary col-span-1 row-span-1 flex items-center">
-            <Logo />
+      <QueryClientProvider client={queryClient}>
+        <div className={`main flex flex-col h-screen w-full`}>
+          <div className="flex flex-row">
+            <div className="logo bg-secondary col-span-1 row-span-1 flex items-center">
+              <Logo />
+            </div>
+            <div className="navbar bg-secondary flex flex-grow  px-4">
+              <Navbar />
+            </div>
           </div>
-          <div className="navbar bg-secondary flex flex-grow  px-4">
-            <Navbar />
+          <div className="flex flex-row bg-secondary w-full grow">
+            <div id="sidebar" className="hidden lg:block">
+              <BoardList boards={boards} />
+            </div>
+            <div className="content bg-primary p-4  ">
+              <Outlet context={{ toggleModal }} />
+            </div>
           </div>
         </div>
-        <div className="flex flex-row bg-secondary w-full grow">
-          <div id="sidebar" className="hidden lg:block">
-            <BoardList boards={boards} />
-          </div>
-          <div className="content bg-primary p-4  ">
-            <Outlet context={{ toggleModal }} />
-          </div>
-        </div>
-      </div>
+      </QueryClientProvider>
     </>
   );
 }

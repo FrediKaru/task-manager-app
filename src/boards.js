@@ -2,8 +2,8 @@ import { initializeApp } from "firebase/app";
 import { getDatabase, onValue, ref, set, get } from "firebase/database";
 import { v4 as uuidv4 } from "uuid";
 
-const userIdExample = "0caef751-fef4-41bd-9207-c06886b9605e";
-
+// let userID = "0caef751-fef4-41bd-9207-c06886b9605e";
+let userId = "73ad726b";
 const firebaseConfig = {
   databaseURL:
     "https://task-app-9b589-default-rtdb.europe-west1.firebasedatabase.app/",
@@ -14,6 +14,7 @@ const database = getDatabase(app);
 
 import localforage from "localforage";
 import { data } from "autoprefixer";
+import { useQuery } from "@tanstack/react-query";
 // import { matchSorter } from "match-sorter";
 
 export async function loadBoards() {
@@ -44,18 +45,16 @@ export async function loadBoards() {
 //   console.log("likes count is", data);
 // });
 
-export async function getBoards(
-  userID = "0caef751-fef4-41bd-9207-c06886b9605e",
-  query
-) {
-  await fakeNetwork(`getBoards:${query}`);
-  const boardsRef = ref(database, "users/" + userID + "/boards");
+export async function getBoards(userId = "73ad726b") {
+  const boardsRef = ref(database, `users/${userId}/boards`);
 
   return new Promise((resolve, reject) => {
     onValue(
       boardsRef,
       (snapshot) => {
         const data = snapshot.val();
+        for (const [key, value] of Object.entries(data)) {
+        }
         resolve(data);
       },
       (error) => {
@@ -63,12 +62,10 @@ export async function getBoards(
       }
     );
   });
-
   //   if (!boards) boards = [];
 }
-export async function saveBoard(id, updatedBoard) {
-  let userID = "0caef751-fef4-41bd-9207-c06886b9605e";
 
+export async function saveBoard(id, updatedBoard) {
   const boardRef = ref(database, `users/${userID}/boards/${id}`);
 
   try {
@@ -94,17 +91,16 @@ export async function saveBoard(id, updatedBoard) {
   }
 }
 
-export async function getBoard(id) {
-  let userID = "0caef751-fef4-41bd-9207-c06886b9605e";
-
-  const boardRef = ref(database, "users/" + userID + "/boards/" + id);
+export async function getColumnDataById(key) {
+  const columnRef = ref(database, `lists/${key}`);
   return new Promise((resolve, reject) => {
     onValue(
-      boardRef,
+      columnRef,
       (snapshot) => {
         const data = snapshot.val();
         resolve(data);
       },
+
       (error) => {
         reject(error);
       }
@@ -112,20 +108,77 @@ export async function getBoard(id) {
   });
 }
 
-export async function getTaskByName(taskName) {
-  await fakeNetwork(`card:${taskName}`);
-  let boards = await localforage.getItem("boards");
+export async function getCardById(key) {
+  const cardsRef = ref(database, `cards/${key}`);
+  return new Promise((resolve, reject) => {
+    onValue(
+      cardsRef,
+      (snapshot) => {
+        const data = snapshot.val();
+        console.log("data in get cards is", data);
+        resolve(data);
+      },
 
-  for (const board of boards) {
-    for (const column of board.columns) {
-      for (const task of column.tasks) {
-        if (task.title === taskName) {
-          return task;
-        }
+      (error) => {
+        reject(error);
       }
-    }
+    );
+  });
+}
+export async function getBoard(id) {
+  try {
+    const res = fetchBoard(id);
+    return res;
+  } catch (error) {
+    console.log(error);
   }
 }
+
+export async function fetchColumns(columnId) {
+  const db = getDatabase();
+  const columnRef = ref(db, `lists/${columnId}`);
+  const snapshot = await get(columnRef);
+  return snapshot.val();
+}
+
+async function fetchBoard(boardId) {
+  const db = getDatabase();
+  const boardRef = ref(db, `boards/${boardId}`);
+  const snapshot = await get(boardRef);
+  return snapshot.val();
+}
+
+export async function useBoard(boardId) {
+  return useQuery(["board", boardId], () => fetchBoard(boardId));
+}
+
+export async function getTaskByName(userID, boardId, taskName) {
+  const boardRef = ref(
+    db,
+    "users/" + userID + "/boards/" + boardId + "/columns"
+  );
+
+  try {
+    const snapshot = await get(boardRef);
+    if (snapshot.exists()) {
+      const columns = snapshot.val();
+      for (const columnId in columns) {
+        const cards = columns[columnId].cards;
+        for (const cardId in cards) {
+          if (cards[cardId].title === taskName) {
+            return { cardId, ...cards[cardId] };
+          }
+        }
+      }
+    } else {
+      console.log("No data available");
+    }
+  } catch (error) {
+    console.error(error);
+  }
+  return null;
+}
+
 export async function saveTask(oldTask, updatedTask) {
   await fakeNetwork(`card:${oldTask.title}`);
   let boards = await localforage.getItem("boards");
@@ -254,11 +307,50 @@ export async function createBoard() {
   await setForage(boards);
   return board;
 }
-async function addNewUserToDatabase(userID, username) {
-  set(ref(database, "users/" + userID), {
+
+// addNewUserToDatabase("Thomas");
+
+function createUid() {
+  return uuidv4().substring(0, 8);
+}
+
+async function addNewUserToDatabase(username) {
+  const newUserUid = createUid();
+  const newBoardUid = createUid();
+  const newListUid = createUid();
+  const newCardUid = createUid();
+
+  set(ref(database, "users/" + newUserUid), {
     username: username,
-    boards: [2, 3, 5],
+    email: "test@gmail.com",
+    boards: {
+      [newBoardUid]: true,
+    },
   });
+  set(ref(database, "boards/" + newBoardUid), {
+    userId: newUserUid,
+    boardNane: "Demo board",
+    lists: { [newListUid]: true },
+  });
+  set(ref(database, "lists/" + newListUid), {
+    boardId: newBoardUid,
+    listName: "To Do",
+    cards: {
+      [newCardUid]: true,
+    },
+  });
+  set(ref(database, "cards/" + newCardUid), {
+    listId: newListUid,
+    title: "Build UI for onboarding flow",
+    description: "",
+    status: "Todo",
+    createdAt: "2024-07-01",
+  });
+
+  // set(ref(database, "users/" + userID), {
+  //   username: username,
+  //   boards: [2, 3, 5],
+  // });
 }
 
 async function setForage(boards) {
