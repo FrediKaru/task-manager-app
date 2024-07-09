@@ -5,7 +5,7 @@ export async function loadBoards() {
   console.log("loadboards triggered");
 
   try {
-    const url = "src/api/data.json";
+    const url = "/src/api/data.json";
     const response = await fetch(url);
 
     if (!response.ok) {
