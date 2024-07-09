@@ -4,17 +4,8 @@ const inputClass =
   "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white";
 const labelClass = "block text-sm font-medium text-gray-900 dark:text-white";
 
-type Subtask = { title: string; isCompleted: boolean };
-
-type FormData = {
-  title: string;
-  description?: string;
-  status: string;
-  subtasks?: Subtask[];
-};
-
 export const AddModal = ({ exitModal, columns, addTask }) => {
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState({
     title: "",
     status: "",
   });

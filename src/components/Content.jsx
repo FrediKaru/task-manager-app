@@ -3,7 +3,7 @@ import React from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 export const Content = ({ selectedBoard }) => {
-  function completedTasks(tasks: Array<[]>): number {
+  function completedTasks(tasks) {
     const completedTasks = tasks.filter((task) => task.isCompleted === true);
     return completedTasks.length;
   }
@@ -28,7 +28,7 @@ export const Content = ({ selectedBoard }) => {
               <Droppable droppableId={column.name} type="group">
                 {(provided) => (
                   <div {...provided.droppableProps} ref={provided.innerRef}>
-                    {column.tasks.map((task, index: number) => (
+                    {column.tasks.map((task, index) => (
                       <Draggable
                         draggableId={task.title}
                         key={task.title}

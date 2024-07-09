@@ -16,7 +16,7 @@ function App() {
   const [selectedBoard, setSelectedBoard] = useState(allBoards.boards[0]);
   const [modalOpen, setModalOpen] = useState(true);
 
-  function selectBoard(boardName: string): void {
+  function selectBoard(boardName) {
     setSelectedBoard(data.boards.find((board) => board.name === boardName));
   }
 
@@ -29,7 +29,7 @@ function App() {
       const updatedBoard = { ...selectedBoard };
 
       const updatedColumn = { ...updatedBoards.columns[columnIndex] };
-//////!!!!!!!!!!!!
+      //////!!!!!!!!!!!!
       updatedColumn.push(task);
       updatedBoards.columns[columnIndex] = updatedColumn;
 
@@ -41,7 +41,7 @@ function App() {
     }
   }
 
-  function setModal(): void {
+  function setModal() {
     setModalOpen(!modalOpen);
   }
   return (
