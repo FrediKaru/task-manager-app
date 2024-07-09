@@ -9,9 +9,14 @@ import BoardList from "../components/BoardList";
 import { useState } from "react";
 
 export async function loader() {
-  const boards = await getBoards();
-  console.log("loader data in test is this", boards);
-  return { boards };
+  try {
+    const boards = await getBoards();
+    console.log("API Response:", boards); // Log API response
+    return { boards };
+  } catch (error) {
+    console.error("Error fetching boards:", error);
+    throw error; // Propagate the error if needed
+  }
 }
 
 export async function action({ request, params }) {
