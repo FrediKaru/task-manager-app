@@ -9,15 +9,17 @@ export async function loadBoards() {
     const response = await fetch(url);
 
     if (!response.ok) {
-      throw new Error("Failed to fetch api data");
+      throw new Error("Failed to fetch API data");
     }
+
     const savedBoards = await response.json();
     console.log(savedBoards);
 
     await localforage.setItem("boards", savedBoards.boards);
-    return savedBoards.boards;
+
+    return savedBoards.boards; // Return the fetched boards
   } catch (error) {
-    console.error("Errorss fetching tasks", error);
+    console.error("Error fetching boards", error);
     throw error;
   }
 }
@@ -29,11 +31,15 @@ export async function getBoards(query) {
     await fakeNetwork(`getBoards:${query}`);
 
     let boards = await localforage.getItem("boards");
+
     if (!boards) {
       boards = await loadBoards();
     }
+
+    return boards; // Return boards (either from local storage or fetched)
   } catch (error) {
     console.error("Error fetching boards", error);
+    throw error; // Propagate the error if needed
   }
 }
 export async function saveBoard(updatedBoard) {
