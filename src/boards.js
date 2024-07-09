@@ -13,23 +13,28 @@ export async function loadBoards() {
     }
     const savedBoards = await response.json();
     console.log(savedBoards);
-    set(savedBoards.boards);
+
+    await localforage.setItem("boards", savedBoards.boards);
+    return savedBoards.boards;
   } catch (error) {
     console.error("Errorss fetching tasks", error);
+    throw error;
   }
 }
 
 export async function getBoards(query) {
   console.log("getboards triggered");
-  await fakeNetwork(`getBoards:${query}`);
-  let boards = await localforage.getItem("boards");
-  if (!boards) {
-    loadBoards();
+
+  try {
+    await fakeNetwork(`getBoards:${query}`);
+
     let boards = await localforage.getItem("boards");
-    return boards;
+    if (!boards) {
+      boards = await loadBoards();
+    }
+  } catch (error) {
+    console.error("Error fetching boards", error);
   }
-  //   if (!boards) boards = [];
-  return boards;
 }
 export async function saveBoard(updatedBoard) {
   console.log("updated board is: ", updatedBoard);
