@@ -14,7 +14,7 @@ import data from "./data.json";
 function App() {
   const [allBoards, setAllBoards] = useState(data);
   const [selectedBoard, setSelectedBoard] = useState(allBoards.boards[0]);
-  const [modalOpen, setModalOpen] = useState(true);
+  const [modalOpen, setModalOpen] = useState(false);
 
   function selectBoard(boardName) {
     setSelectedBoard(data.boards.find((board) => board.name === boardName));
