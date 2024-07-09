@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getBoards, saveBoardName } from "../boards";
+import { getBoard, saveBoardName } from "../boards";
 import DropdownButton from "./Dropdown";
 
 export const Navbar = () => {

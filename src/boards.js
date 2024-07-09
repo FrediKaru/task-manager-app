@@ -125,9 +125,19 @@ export async function getCardById(key) {
     );
   });
 }
+export async function getBoard2(id) {
+  try {
+    // Simulate fetching data
+    console.log("getboard2 running");
+    return id;
+  } catch (error) {
+    console.log("Error in getBoard2 function:", error);
+    throw error; // Re-throw the error so that react-query can handle it
+  }
+}
 export async function getBoard(id) {
   try {
-    const res = fetchBoard(id);
+    const res = await fetchBoard(id);
     return res;
   } catch (error) {
     console.log(error);

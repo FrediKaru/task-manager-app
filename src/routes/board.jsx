@@ -10,7 +10,8 @@ import {
 // database/storage functions
 import {
   addTask,
-  getBoards,
+  getBoard,
+  getBoard2,
   getCardById,
   getColumnDataById,
   saveBoard,
@@ -21,6 +22,8 @@ import {
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { Card } from "../components/Card";
 import { AddCard } from "../components/AddCard";
+import { useQuery } from "@tanstack/react-query";
+import { data } from "autoprefixer";
 
 // handle formdata submit when task is added
 export async function action({ request, params }) {
@@ -40,11 +43,22 @@ export async function loader({ params }) {
 }
 
 export const Board = () => {
+  const { id } = useParams();
+  const {
+    status: statusPost,
+    error: errorPost,
+    data: board2,
+  } = useQuery({
+    queryKey: ["board", parseInt(id)],
+    queryFn: () => getBoard2(id),
+  });
+
+  console.log("Status:", statusPost);
+  console.log("Error:", errorPost);
+  console.log("Board data:", board2);
+
   const { toggleModal } = useOutletContext();
   const navigate = useNavigate();
-  const boardId = useParams();
-  // const { board } = useLoaderData();
-  const { data: board, isLoading, error } = useBoard(boardId);
   const [columns, setColumns] = useState([]);
   // const [activeBoard, setActiveBoard] = useState(board);
 
