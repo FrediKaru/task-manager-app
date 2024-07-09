@@ -10,6 +10,7 @@ import { useState } from "react";
 
 export async function loader() {
   const boards = await getBoards();
+  console.log("loader data in test is this", boards);
   return { boards };
 }
 
