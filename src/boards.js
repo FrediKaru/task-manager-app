@@ -8,10 +8,6 @@ export async function loadBoards() {
     const url = "/src/api/data.json";
     const response = await fetch(url);
 
-    if (!response.ok) {
-      throw new Error("Failed to fetch API data");
-    }
-
     const savedBoards = await response.json();
     console.log(savedBoards);
 
