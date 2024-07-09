@@ -1,14 +1,20 @@
 import localforage from "localforage";
+import { mockData } from "./api/mockData";
 // import { matchSorter } from "match-sorter";
 
 export async function loadBoards() {
   console.log("loadboards triggered");
 
   try {
-    const url = "/src/api/data.json";
-    const response = await fetch(url);
+    // const url = "/src/api/data.json";
+    // const response = await fetch(url);
 
-    const savedBoards = await response.json();
+    // if (!response.ok) {
+    //   throw new Error("Failed to fetch API data");
+    // }
+
+    // const savedBoards = await response.json();
+    const savedBoards = mockData;
     console.log(savedBoards);
 
     await localforage.setItem("boards", savedBoards.boards);
