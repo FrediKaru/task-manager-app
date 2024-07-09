@@ -2,8 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  --left-padding: 1.5rem;
+  box-sizing: border-box;
+}
+
 * {
   padding: 0px;
+}
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
 }
 
 /* .logo,
@@ -12,9 +22,25 @@
   padding: 10px 20px;
 } */
 
+/* .main {
+  max-width: 100%;
+  overflow: hidden;
+} */
+
 .logo,
-.sidebar {
+#sidebar {
   min-width: 200px;
+}
+.content {
+  overflow: scroll;
+}
+
+.content,
+.navbar {
+  flex-grow: 1;
+}
+.logo {
+  padding-left: var(--left-padding);
 }
 .inp-group > input,
 .inp-group > textarea,
@@ -26,3 +52,68 @@
 .inp-group > label {
   margin-bottom: 5px;
 }
+
+#sidebar nav ul li:has(a.active) {
+  background: hsl(259, 77%, 44%);
+  color: white;
+}
+
+a.pending {
+  color: rgb(156, 156, 156);
+}
+#sidebar li {
+  margin: 0rem 0;
+  padding: 0.5rem 0;
+  padding-left: var(--left-padding);
+  border-radius: 0 10rem 10rem 0;
+}
+
+nav h1 {
+  margin-left: var(--left-padding);
+  margin-bottom: 0.5rem;
+}
+#sidebar {
+  padding-right: 1rem;
+}
+
+.modal {
+  position: absolute;
+  top: 52%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: max(700px, 2rem);
+  z-index: 2;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
+.horizontal-scroll-wrapper {
+  flex: 1;
+  display: flex;
+  flex-wrap: nowrap;
+  max-width: 100%;
+  overflow-x: scroll;
+  gap: 30px;
+  flex-grow: 1;
+  min-height: 100%;
+}
+
+.horizontal-scroll-wrapper > div {
+  flex: 0 0 auto;
+  width: 400px;
+  height: auto;
+}
+
+/* .testing1 {
+  overflow: hidden;
+  width: 50%;
+} */
