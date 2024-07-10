@@ -21,7 +21,7 @@ export async function action({ request, params }) {
   const newTask = Object.fromEntries(formData);
 
   await addTask(params.boardId, newTask.columnName, newTask);
-  window.location.reload();
+  // window.location.reload();
   return null;
 }
 // load board through url navigation board id
