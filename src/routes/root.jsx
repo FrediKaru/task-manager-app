@@ -1,4 +1,10 @@
-import { Outlet, useLoaderData, redirect, useNavigate } from "react-router-dom";
+import {
+  Outlet,
+  useLoaderData,
+  redirect,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 
 import { getBoards, addBoard } from "../boards";
 
@@ -34,8 +40,11 @@ function Root() {
   const [isModalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
 
+  // prevent the page to load outside of page route
   useEffect(() => {
-    return navigate("/boards/1");
+    if (location.pathname !== "/boards") {
+      navigate("/boards/1");
+    }
   }, []);
 
   const toggleModal = () => {
