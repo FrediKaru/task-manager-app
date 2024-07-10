@@ -23,8 +23,8 @@ export async function action({ request, params }) {
   await addTask(params.boardId, newTask.columnName, newTask);
 
   // Use history.push() to navigate to a different route after adding the task
-  const history = useHistory();
-  history.push("/boards"); // Replace '/boards' with the appropriate route
+  const navigate = useNavigate();
+  navigate("/boards/1");
 
   return null;
 }
