@@ -113,7 +113,7 @@ export async function updateTask(oldTitle, updates) {
 }
 
 export async function addBoard(name, id) {
-  await fakeNetwork();
+  // await fakeNetwork();
   let boards = (await localforage.getItem("boards")) || [];
   let updatedBoards = [
     ...boards,
@@ -153,7 +153,7 @@ export async function addBoard(name, id) {
 }
 
 export async function addTask(boardId, columnName, newTask) {
-  await fakeNetwork(`card:${newTask.title}`);
+  // await fakeNetwork(`card:${newTask.title}`);
   let boards = await localforage.getItem("boards");
   for (const board of boards) {
     if (board.id == boardId) {
