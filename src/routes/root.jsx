@@ -1,4 +1,4 @@
-import { Outlet, useLoaderData, redirect } from "react-router-dom";
+import { Outlet, useLoaderData, redirect, useNavigate } from "react-router-dom";
 
 import { getBoards, addBoard } from "../boards";
 
@@ -6,7 +6,7 @@ import { getBoards, addBoard } from "../boards";
 import { Navbar } from "../components/Navbar";
 import { Logo } from "../components/Logo";
 import BoardList from "../components/BoardList";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export async function loader() {
   try {
@@ -31,6 +31,11 @@ export async function action({ request, params }) {
 function Root() {
   const { boards } = useLoaderData();
   const [isModalOpen, setModalOpen] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    return navigate("/boards/1");
+  }, [navigate]);
 
   const toggleModal = () => {
     setModalOpen(!isModalOpen);
