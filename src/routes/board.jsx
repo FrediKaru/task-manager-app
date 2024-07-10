@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import {
   useNavigate,
   Outlet,
-  useHistory
+  useHistory,
   useParams,
   useLoaderData,
   useOutletContext,
