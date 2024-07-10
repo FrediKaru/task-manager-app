@@ -23,10 +23,7 @@ export async function action({ request, params }) {
 
   await addTask(params.boardId, newTask.columnName, newTask);
 
-  // Use history.push() to navigate to a different route after adding the task
-  redirect("/boards/1");
-
-  return null;
+  return redirect("/boards/1");
 }
 // load board through url navigation board id
 export async function loader({ params }) {
