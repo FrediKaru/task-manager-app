@@ -22,7 +22,8 @@ export async function action({ request, params }) {
   const newTask = Object.fromEntries(formData);
 
   await addTask(params.boardId, newTask.columnName, newTask);
-
+  location.reload();
+  // Force a state update
   return redirect(`/boards/${params.boardId}`);
 }
 // load board through url navigation board id

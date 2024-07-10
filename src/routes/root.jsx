@@ -26,6 +26,7 @@ export async function action({ request, params }) {
   console.log("new id", id);
   await addBoard(newForm.name, id);
   return redirect(`/boards/${id}`);
+  // return null;
 }
 
 function Root() {
@@ -35,7 +36,7 @@ function Root() {
 
   useEffect(() => {
     return navigate("/boards/1");
-  }, [navigate]);
+  }, []);
 
   const toggleModal = () => {
     setModalOpen(!isModalOpen);
