@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   useNavigate,
   Outlet,
+  useHistory
   useParams,
   useLoaderData,
   useOutletContext,
@@ -21,7 +22,11 @@ export async function action({ request, params }) {
   const newTask = Object.fromEntries(formData);
 
   await addTask(params.boardId, newTask.columnName, newTask);
-  // window.location.reload();
+
+  // Use history.push() to navigate to a different route after adding the task
+  const history = useHistory();
+  history.push("/boards"); // Replace '/boards' with the appropriate route
+
   return null;
 }
 // load board through url navigation board id
