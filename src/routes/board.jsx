@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import {
   useNavigate,
   Outlet,
+  redirect,
   useLoaderData,
   useOutletContext,
 } from "react-router-dom";
@@ -23,8 +24,7 @@ export async function action({ request, params }) {
   await addTask(params.boardId, newTask.columnName, newTask);
 
   // Use history.push() to navigate to a different route after adding the task
-  const navigate = useNavigate();
-  navigate("/boards/1");
+  redirect("/boards/1");
 
   return null;
 }
