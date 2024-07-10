@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import {
   useNavigate,
+  useParams,
   Outlet,
   redirect,
   useLoaderData,
@@ -23,7 +23,6 @@ export async function action({ request, params }) {
 
   await addTask(params.boardId, newTask.columnName, newTask);
   location.reload();
-  // Force a state update
   return redirect(`/boards/${params.boardId}`);
 }
 // load board through url navigation board id
@@ -33,9 +32,9 @@ export async function loader({ params }) {
 }
 
 export const Board = () => {
-  const { toggleModal } = useOutletContext();
-  const navigate = useNavigate();
   const params = useParams();
+  const navigate = useNavigate();
+  const { toggleModal } = useOutletContext();
   const { board } = useLoaderData();
   const [activeBoard, setActiveBoard] = useState(board);
 
