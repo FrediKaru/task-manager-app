@@ -23,7 +23,7 @@ export async function action({ request, params }) {
 
   await addTask(params.boardId, newTask.columnName, newTask);
 
-  return redirect("/boards/1");
+  return redirect(`/boards/${params.boardId}`);
 }
 // load board through url navigation board id
 export async function loader({ params }) {
