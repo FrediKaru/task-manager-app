@@ -6,7 +6,7 @@ import lightLogo from "../assets/logo-light.svg";
 export const Logo = () => {
   return (
     <div>
-      <img src={lightLogo} alt="" />
+      <img src={lightLogo} alt="logo" />
     </div>
   );
 };
