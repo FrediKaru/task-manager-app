@@ -13,6 +13,7 @@ import { Navbar } from "../components/Navbar";
 import { Logo } from "../components/Logo";
 import BoardList from "../components/BoardList";
 import { useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 export async function loader() {
   try {
@@ -28,7 +29,7 @@ export async function loader() {
 export async function action({ request, params }) {
   const formData = await request.formData();
   const newForm = Object.fromEntries(formData);
-  const id = await Math.random();
+  const id = uuidv4();
   console.log("new id", id);
   await addBoard(newForm.name, id);
   return redirect(`/boards/${id}`);
@@ -42,7 +43,7 @@ function Root() {
 
   // prevent the page to load outside of page route
   useEffect(() => {
-    if (location.pathname !== "/boards") {
+    if (location.pathname === "/") {
       navigate("/boards/1");
     }
   }, []);
