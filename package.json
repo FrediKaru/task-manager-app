@@ -17,6 +17,7 @@
     "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18.2.0",
     "react-onclickoutside": "^6.13.0",
+    "react-query": "^3.39.3",
     "react-router-dom": "^6.21.3",
     "sort-by": "^1.2.0",
     "uuid": "^10.0.0",

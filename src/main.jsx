@@ -22,6 +22,15 @@ import {
 //Errors
 import ErrorPage from "./routes/error-page.jsx";
 import BoardErrorPage from "./routes/board-error.jsx";
+import { QueryClient } from "react-query";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 10,
+    },
+  },
+});
 
 const router = createBrowserRouter([
   {
@@ -49,7 +58,10 @@ const router = createBrowserRouter([
     ],
   },
 ]);
+const rootElement = document.getElementById("root");
 
-ReactDOM.createRoot(document.getElementById("root")).render(
-  <RouterProvider router={router} />
+ReactDOM.createRoot(rootElement).render(
+  <QueryClientProvider client={queryClient}>
+    <RouterProvider router={router} />
+  </QueryClientProvider>
 );
