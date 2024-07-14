@@ -22,7 +22,7 @@ import {
 //Errors
 import ErrorPage from "./routes/error-page.jsx";
 import BoardErrorPage from "./routes/board-error.jsx";
-import { QueryClient } from "react-query";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 const queryClient = new QueryClient({
   defaultOptions: {
