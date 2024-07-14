@@ -15,16 +15,18 @@ import BoardList from "../components/BoardList";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-export async function loader() {
-  try {
-    const boards = await getBoards();
-    console.log("API Response:", boards); // Log API response
-    return { boards };
-  } catch (error) {
-    console.error("Error fetching boards:", error);
-    throw error; // Propagate the error if needed
-  }
-}
+import { QueryClient } from "react-query";
+
+const boardsListQuery = (q) =>
+  QueryOptions({
+    queryKey: ["list", q],
+    queryFn: () => getBoards(q),
+  });
+
+export const loader = (queryClient) => async () => {
+  const boards = await queryClient.ensureQueryData(getBoards());
+  return { boards };
+};
 
 export async function action({ request, params }) {
   const formData = await request.formData();
