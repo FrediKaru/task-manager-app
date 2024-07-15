@@ -15,16 +15,16 @@ import BoardList from "../components/BoardList";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-import { QueryClient } from "react-query";
+import { QueryClient, queryOptions } from "@tanstack/react-query";
 
-const boardsListQuery = (q) =>
-  QueryOptions({
-    queryKey: ["list", q],
-    queryFn: () => getBoards(q),
+const boardsListQuery = () =>
+  queryOptions({
+    queryKey: ["boards"],
+    queryFn: () => getBoards(),
   });
 
 export const loader = (queryClient) => async () => {
-  const boards = await queryClient.ensureQueryData(getBoards());
+  const boards = await queryClient.ensureQueryData(boardsListQuery());
   return { boards };
 };
 

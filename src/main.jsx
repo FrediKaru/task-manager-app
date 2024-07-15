@@ -22,7 +22,7 @@ import {
 //Errors
 import ErrorPage from "./routes/error-page.jsx";
 import BoardErrorPage from "./routes/board-error.jsx";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -37,7 +37,7 @@ const router = createBrowserRouter([
     path: "/",
     element: <Root />,
     errorElement: <ErrorPage />,
-    loader: rootLoader,
+    loader: rootLoader(queryClient),
     action: rootAction,
     children: [
       {
