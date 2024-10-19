@@ -1,30 +1,38 @@
-# React + TypeScript + Vite
+# Tasks and Goals Management App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+🚀 **Welcome to the Tasks and Goals Management App!** This application is designed to help you stay productive by tracking your tasks and long-term goals in a simple, intuitive interface.
 
-Currently, two official plugins are available:
+## Demo
+Live Demo: https://inventory-txje.vercel.app/
+<img width="1551" alt="task_manager" src="https://github.com/user-attachments/assets/b8c4c9f0-f5cd-4779-8042-470be500964c">
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+📅 **Key Features:**
+- Create, edit, and move cards between columns
+- Create and switch between multiple boards for different projects
+- Edit card attributes such as titles and sub-tasks
+- Drag and drop cards for reordering and switching between columns
+- Responsive design for both desktop and mobile
 
-## Expanding the ESLint configuration
+🔧 **Tech Stack:** React, Tailwind CSS, Firebase
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+## Installation
+clone the repository
+```
+git clone git@github.com:FrediKaru/task-manager-app.git
+```
+locate the repository
+```
+cd <CLONED-REPOSITORY>
+```
+install dependencies
+```
+npm install
+```
+run in development mode
+```
+npm run dev
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Contact
+Email: fredikaru@gmail.com
+LinkedIn: www.linkedin.com/in/fredikaru197
